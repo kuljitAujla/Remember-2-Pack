@@ -1,0 +1,39 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  font-family: DM Sans, sans-serif;
+  background-color: #121212; /* Dark background */
+  color: #EAEAEA; /* Light text for readability */
+  height: 100%;
+}
+
+header {
+  background-color: #1E1E1E; /* Darker header strip */
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  color: #ffffff;
+  height: 100px;
+  align-items: center;
+  border-bottom: 1px solid #2c2c2c; /* Subtle border */
+}
+
+main {
+  padding: 50px 30px 10px;
+  background-color: #181818; /* Slightly lighter than body for depth */
+  border-radius: 8px;
+  min-height: 100vh;
+}
+
+li {
+  margin-bottom: 10px;
+  line-height: 1.6;        /* improve readability */
+  border-radius: 6px;      /* soften edges */
+}
+
+textarea, input {
+  font-family: DM Sans, sans-serif;
+}

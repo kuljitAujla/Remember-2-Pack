@@ -1,0 +1,13 @@
+{
+  "root": true,
+  "overrides": [
+    {
+      "files": ["server/**/*.js"],
+      "env": { "node": true }
+    },
+    {
+      "files": ["client/**/*.js", "client/**/*.jsx"],
+      "env": { "browser": true }
+    }
+  ]
+}
