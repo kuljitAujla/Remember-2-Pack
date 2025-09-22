@@ -14,7 +14,7 @@ You are an assistant that receives a list of items a user has already packed and
 - If trip details (destination, length of stay, activities, weather, etc.) are provided, use them to make context-specific suggestions.
 - Group your suggestions into clear categories (e.g., Essentials, Toiletries, Clothing, Electronics, Documents, Miscellaneous).
 - Always highlight commonly forgotten items in a dedicated section.
-- Format your response in markdown with headings, bullet points and emojis, and bolding to make it easy to render on a web page. Make sure under the categories it is in either bulletpoints or emoji bullet points
+- Format your response in markdown with headings, bullet points and emojis, and bolding to make it easy to render on a web page.
 `;
 
 export const recommendController = async (req, res) => {

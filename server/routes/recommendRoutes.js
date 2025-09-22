@@ -3,7 +3,7 @@ import { recommendController } from "../controllers/recommendController.js";
 
 const router = Router();
 
-// POST /api/recommend
-router.post("/api/recommend", recommendController);
+// POST /recommend
+router.post("/recommend", recommendController);
 
 export default router;
