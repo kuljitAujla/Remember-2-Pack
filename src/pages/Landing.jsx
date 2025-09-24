@@ -1,37 +1,76 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './landingpage.css';
+import Header from '../components/Header';
 
 export default function Landing() {
   return (
     <div className="landing-page">
-      <div className="hero-section">
-        <h1>Remember 2 Pack</h1>
-        <p className="hero-description">
-          Never forget what to pack again! Our AI-powered packing assistant helps you create 
-          personalized packing lists based on your trip details, destination, and activities.
-        </p>
-        <div className="cta-buttons">
-          <Link to="/login" className="btn btn-primary">Login</Link>
-          <Link to="/signup" className="btn btn-secondary">Sign Up</Link>
-        </div>
-      </div>
+      <Header />
       
-      <div className="features-section">
-        <h2>Features</h2>
-        <div className="features-grid">
-          <div className="feature-card">
-            <h3>AI-Powered Recommendations</h3>
-            <p>Get personalized packing suggestions based on your destination and activities.</p>
+      <div className="landing-container">
+        <section className="hero-section">
+          <h1 className="hero-title">Never forget what to pack again</h1>
+          <p className="hero-description">
+            Add items to your bag, describe your trip, and get AI-powered recommendations 
+            for everything else you need — organized by category.
+          </p>
+          <div className="cta-buttons">
+            <Link to="/signup" className="btn btn-primary">Get Started Free</Link>
+            <Link to="/login" className="btn btn-secondary">Login</Link>
           </div>
-          <div className="feature-card">
-            <h3>Save Your Lists</h3>
-            <p>Save and organize your packing lists for future trips.</p>
+        </section>
+
+        <section className="how-it-works">
+          <h2 className="section-title">How it works</h2>
+          <div className="steps">
+            <div className="step">
+              <div className="step-number">1</div>
+              <h3>Add items to your bag</h3>
+              <p>Start by adding the items you already know you need to pack.</p>
+            </div>
+            <div className="step">
+              <div className="step-number">2</div>
+              <h3>Describe your trip</h3>
+              <p>Tell us about your destination, activities, weather, and duration.</p>
+            </div>
+            <div className="step">
+              <div className="step-number">3</div>
+              <h3>Get AI recommendations</h3>
+              <p>Receive categorized suggestions based on your response.</p>
+            </div>
           </div>
-          <div className="feature-card">
-            <h3>Smart Suggestions</h3>
-            <p>Our AI considers weather, duration, and activities to suggest the perfect items.</p>
+        </section>
+
+        <section className="features">
+          <h2 className="section-title">What makes us different</h2>
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="feature-icon">🧠</div>
+              <h3>Smart AI Recommendations</h3>
+              <p>Get personalized suggestions based on your specific trip details and activities.</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">📋</div>
+              <h3>Organized Categories</h3>
+              <p>Items are sorted into clear categories like toiletries, clothing, and essentials.</p>
+            </div>
+            <div className="feature-card">
+              <div className="feature-icon">🎯</div>
+              <h3>Commonly Forgotten Items</h3>
+              <p>We remind you of items people often forget like chargers, medications, and travel documents.</p>
+            </div>
           </div>
-        </div>
+        </section>
+
+        <section className="cta-section">
+          <h2>Ready to pack smarter?</h2>
+          <p>Join thousands of travelers who never forget essentials again.</p>
+          <div className="cta-buttons">
+            <Link to="/signup" className="btn btn-primary">Start Packing</Link>
+            <Link to="/login" className="btn btn-secondary">Login</Link>
+          </div>
+        </section>
       </div>
     </div>
   );

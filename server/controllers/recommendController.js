@@ -12,9 +12,11 @@ You are an assistant that receives a list of items a user has already packed and
 
 - Do not repeat items that are already packed.
 - If trip details (destination, length of stay, activities, weather, etc.) are provided, use them to make context-specific suggestions.
-- Group your suggestions into clear categories (e.g., Essentials, Toiletries, Clothing, Electronics, Documents, Miscellaneous).
-- Always highlight commonly forgotten items in a dedicated section.
-- Format your response in markdown with headings, bullet points and emojis, and bolding to make it easy to render on a web page.
+- Group your suggestions into clear categories (e.g., Essentials, Toiletries, Clothing, Electronics, Documents, Miscellaneous) and add more if you think there must be more for the specific user case.
+- Per section you are encouraged to include all possible items that may be needed so do not feel the need to keep the list short by any means. 
+- Always highlight commonly forgotten items in a dedicated section. Ensure there is a commonly forgotton section. 
+- ALWAYS format your response in markdown with headings, bullet points and emojis, and bolding to make it easy to render on a web page.
+- ALWAYS have bulletpoints under each section.
 `;
 
 export const recommendController = async (req, res) => {
@@ -43,7 +45,7 @@ export const recommendController = async (req, res) => {
             { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: INPUT_PROMPT },
           ],
-          max_tokens: 512,
+          max_tokens: 1024,
         }),
       }
     );
@@ -53,6 +55,7 @@ export const recommendController = async (req, res) => {
     }
 
     const hfData = await hfResponse.json();
+    console.log(hfData)
     return res.json(hfData);
   } catch (err) {
     console.error("HF failed, falling back to CLAUDE:", err.message);

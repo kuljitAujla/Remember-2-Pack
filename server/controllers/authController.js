@@ -1,10 +1,10 @@
+/* global process */
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 import dotenv from "dotenv";
 dotenv.config();
 import transporter from "../config/nodemailer.js";
-import { error } from "console";
 
 export const register = async (req, res) => {
 
