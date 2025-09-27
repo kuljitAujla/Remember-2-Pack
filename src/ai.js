@@ -5,6 +5,7 @@ export async function getRecommendationsFromAI(packedItems, tripSummary) {
     const res = await fetch("/api/recommend", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include", // Important for cookies
       body: JSON.stringify({ packedItems, tripSummary })
     });
 
