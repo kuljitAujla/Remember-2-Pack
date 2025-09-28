@@ -56,9 +56,9 @@ export default function Login() {
       const data = await response.json();
 
       if (data.success) {
-        setMessage('Login successful! Redirecting to email verification...');
+        setMessage('Login successful! Redirecting to dashboard...');
         setTimeout(() => {
-          navigate('/verify-email');
+          navigate('/app');
         }, 1500);
       } else {
         setMessage(data.message || 'Login failed. Please try again.');

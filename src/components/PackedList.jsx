@@ -1,5 +1,3 @@
-import RecommendItems from "./RecommededItems"
-
 export default function packedList({ listOfItems }) {
 
 

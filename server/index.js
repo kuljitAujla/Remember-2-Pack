@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import recommendRoutes from "./routes/recommendRoutes.js";
+import recommendationRoutes from "./routes/recommendationRoutes.js";
 import connectDB from "./config/mongodb.js";
 import authRoutes from "./routes/authRoutes.js";
 import cookieParser from "cookie-parser";
@@ -24,6 +25,7 @@ app.use(cors({credentials: true, origin: true}));
 
 // API endpoints
 app.use("/api", recommendRoutes);
+app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api", userRoutes);
 
