@@ -39,7 +39,7 @@ export default function ForgotPassword() {
     setMessage('');
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/send-reset-otp', {
+      const response = await fetch('/api/auth/send-reset-otp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ export default function ForgotPassword() {
     setMessage('');
 
     try {
-      const response = await fetch('http://localhost:3001/api/auth/reset-password', {
+      const response = await fetch('/api/auth/reset-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

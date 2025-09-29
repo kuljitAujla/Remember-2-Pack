@@ -75,7 +75,7 @@ export default function SavedRecommendations() {
     return (
       <div className="saved-recommendations-page">
         <div className="page-header">
-          <Link to="/dashboard" className="back-btn">← Back to Dashboard</Link>
+          <Link to="/app" className="back-btn">← Back to Dashboard</Link>
           <h1>Saved Recommendations</h1>
         </div>
         <div className="loading">Loading your saved recommendations...</div>
@@ -86,7 +86,7 @@ export default function SavedRecommendations() {
   return (
     <div className="saved-recommendations-page">
       <div className="page-header">
-        <Link to="/dashboard" className="back-btn">← Back to Dashboard</Link>
+        <Link to="/app" className="back-btn">← Back to Dashboard</Link>
         <h1>Saved Recommendations</h1>
       </div>
       
@@ -98,7 +98,7 @@ export default function SavedRecommendations() {
             <div className="no-recommendations">
               <h3>No saved recommendations yet</h3>
               <p>Start by generating some AI recommendations and saving them!</p>
-              <Link to="/dashboard" className="btn-primary">Go to Dashboard</Link>
+              <Link to="/app" className="btn-primary">Go to Dashboard</Link>
             </div>
           ) : (
             recommendations.map((rec) => (
@@ -139,12 +139,6 @@ export default function SavedRecommendations() {
           <div className="recommendation-details">
             <div className="details-header">
               <h2>{selectedRecommendation.title}</h2>
-              <button 
-                className="delete-btn"
-                onClick={() => deleteRecommendation(selectedRecommendation._id)}
-              >
-                Delete
-              </button>
             </div>
             
             <div className="trip-info">
