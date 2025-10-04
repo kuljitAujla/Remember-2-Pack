@@ -100,13 +100,13 @@ export const login = async (req, res) => {
         const user = await userModel.findOne({email});
 
         if(!user) {
-            return res.json({success: false, message: "User not found"});
+            return res.json({success: false, message: "Invalid Email or Password"});
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
 
         if(!isMatch) {
-            return res.json({success: false, message: "Invalid password"});
+            return res.json({success: false, message: "Invalid Email or Password"});
         }
 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: "7d"});

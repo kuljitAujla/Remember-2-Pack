@@ -1,6 +1,7 @@
 import React from "react"
 import Header from '../components/Header';
 import PackedList from "../components/PackedList"
+import SaveRecommendations from "../components/SaveRecommendations"
 import ReactMarkdown from "react-markdown"
 import { getRecommendationsFromAI } from "../ai"
 import "../styles/dashboard.css"
@@ -15,6 +16,7 @@ export default function Dashboard() {
 
   const recommendedEssentials = React.useRef(null)
   const tripDetailsRef = React.useRef(null)
+  const itemInputRef = React.useRef(null)
 
   React.useEffect(() => {
     if (recommendedItems !== "" && recommendedEssentials !== null) {
@@ -25,6 +27,13 @@ export default function Dashboard() {
   function addItem(formData) {
     const newItem = formData.get("item")
     setItems(prevItem => [...prevItem, newItem])
+    
+    // Keep focus on input to maintain keyboard on mobile
+    setTimeout(() => {
+      if (itemInputRef.current) {
+        itemInputRef.current.focus()
+      }
+    }, 0)
   }
 
   async function getRecommendedItems() {
@@ -34,7 +43,6 @@ export default function Dashboard() {
       const generatedRecommendationMarkdown = await getRecommendationsFromAI(items, tripDetails)
       setRecommendedItems(generatedRecommendationMarkdown)
       setTripSummary(tripDetails)
-      tripDetailsRef.current.value = ""
     } catch (error) {
       console.error('Failed to get recommendations:', error)
     } finally {
@@ -81,6 +89,7 @@ export default function Dashboard() {
           <small className="purpose-info">For the best recommendations, add as many items you know you need to pack.</small>
           <form action={addItem} className="add-item-form">
             <input 
+              ref={itemInputRef}
               aria-label="add packed item" 
               type="text" 
               placeholder="e.g. charger"
@@ -128,46 +137,26 @@ export default function Dashboard() {
         {recommendedItems && (
           <section className="suggested-recipe-container">
             {/* Save Section - Made more prominent */}
-            <div className="save-recommendations-section">
-              <div className="save-section-header">
-                <h3>💾 Save Your Recommendations</h3>
-                <p>Give your trip a name and save these recommendations for later!</p>
-              </div>
-              <div className="save-section">
-                <div className="trip-name-group">
-                  <label htmlFor="trip-title" className="trip-name-label">Trip Name:</label>
-                  <input
-                    id="trip-title"
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g., Summer Vacation 2024, Business Trip to NYC..."
-                    className="trip-title-input"
-                  />
-                </div>
-                <button 
-                  onClick={handleSave}
-                  disabled={saving || !recommendedItems}
-                  className="save-btn"
-                >
-                  {saving ? (
-                    <>
-                      <span className="loading-spinner"></span>
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      💾 Save Recommendations
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
+            <SaveRecommendations 
+            title={title}
+            setTitle={setTitle}
+            handleSave={handleSave}
+            saving={saving}
+            recommendedItems={recommendedItems}
+            />
             
             <div className="recommendations-content">
               <h2>Remember 2 Pack: </h2>
               <ReactMarkdown>{recommendedItems}</ReactMarkdown>
             </div>
+
+            <SaveRecommendations 
+            title={title}
+            setTitle={setTitle}
+            handleSave={handleSave}
+            saving={saving}
+            recommendedItems={recommendedItems}
+            />
           </section>
         )}
       </main>
