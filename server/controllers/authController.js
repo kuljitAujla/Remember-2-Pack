@@ -14,6 +14,15 @@ export const register = async (req, res) => {
         return res.json({success: false, message: "All fields are required"});
     }
 
+    // Password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+        return res.json({
+            success: false, 
+            message: "Password must be at least 8 characters with uppercase, lowercase, number, and special character"
+        });
+    }
+
     try {
         const existingUser = await userModel.findOne({email});
 

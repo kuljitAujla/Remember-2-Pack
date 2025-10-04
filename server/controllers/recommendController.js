@@ -21,8 +21,6 @@ You are an assistant that receives a list of items a user has already packed and
 
 export const recommendController = async (req, res) => {
 
-
-
   const { packedItems, tripSummary } = req.body;
   const INPUT_PROMPT = `
   User: I have ${packedItems}. Trip details are: ${tripSummary}.
@@ -45,7 +43,7 @@ export const recommendController = async (req, res) => {
             { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: INPUT_PROMPT },
           ],
-          max_tokens: 1024,
+          max_tokens: 2048,
         }),
       }
     );

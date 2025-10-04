@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [tripSummary, setTripSummary] = React.useState("")
   const [title, setTitle] = React.useState("My Trip")
   const [saving, setSaving] = React.useState(false)
+  const [loadingRecommendations, setLoadingRecommendations] = React.useState(false)
 
   const recommendedEssentials = React.useRef(null)
   const tripDetailsRef = React.useRef(null)
@@ -27,11 +28,18 @@ export default function Dashboard() {
   }
 
   async function getRecommendedItems() {
-    const tripDetails = tripDetailsRef.current.value
-    const generatedRecommendationMarkdown = await getRecommendationsFromAI(items, tripDetails)
-    setRecommendedItems(generatedRecommendationMarkdown)
-    setTripSummary(tripDetails)
-    tripDetailsRef.current.value = ""
+    setLoadingRecommendations(true)
+    try {
+      const tripDetails = tripDetailsRef.current.value
+      const generatedRecommendationMarkdown = await getRecommendationsFromAI(items, tripDetails)
+      setRecommendedItems(generatedRecommendationMarkdown)
+      setTripSummary(tripDetails)
+      tripDetailsRef.current.value = ""
+    } catch (error) {
+      console.error('Failed to get recommendations:', error)
+    } finally {
+      setLoadingRecommendations(false)
+    }
   }
 
   const handleSave = async () => {
@@ -93,36 +101,73 @@ export default function Dashboard() {
         <div className="recommend-items-container">
           <div className="recommend-items-box">
             <div ref={recommendedEssentials}>
-              <h3>Ready for packing suggestions?</h3>
-              <p>Get personalized packing suggestions based on what you have already added to your bag.</p>
+              <h3>✨ Get Your AI Recommendations</h3>
+              <p>Click below to generate personalized packing suggestions based on your trip details and packed items.</p>
             </div>
-            <button onClick={getRecommendedItems}>Recommend essentials</button>
+            <button 
+              onClick={getRecommendedItems}
+              disabled={loadingRecommendations}
+              className={loadingRecommendations ? "loading" : ""}
+            >
+              {loadingRecommendations ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Getting recommendations...
+                </>
+              ) : (
+                <>
+                  Generate<br />
+                  Recommendations
+                </>
+              )}
+            </button>
           </div>
         </div>
         
         {/* AI Recommendations Section */}
         {recommendedItems && (
           <section className="suggested-recipe-container">
-            <div className="recommendations-header">
-              <h2>Remember 2 Pack: </h2>
+            {/* Save Section - Made more prominent */}
+            <div className="save-recommendations-section">
+              <div className="save-section-header">
+                <h3>💾 Save Your Recommendations</h3>
+                <p>Give your trip a name and save these recommendations for later!</p>
+              </div>
               <div className="save-section">
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Give your trip a name..."
-                  className="trip-title-input"
-                />
+                <div className="trip-name-group">
+                  <label htmlFor="trip-title" className="trip-name-label">Trip Name:</label>
+                  <input
+                    id="trip-title"
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="e.g., Summer Vacation 2024, Business Trip to NYC..."
+                    className="trip-title-input"
+                  />
+                </div>
                 <button 
                   onClick={handleSave}
                   disabled={saving || !recommendedItems}
                   className="save-btn"
                 >
-                  {saving ? "Saving..." : "Save Recommendations"}
+                  {saving ? (
+                    <>
+                      <span className="loading-spinner"></span>
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      💾 Save Recommendations
+                    </>
+                  )}
                 </button>
               </div>
             </div>
-            <ReactMarkdown>{recommendedItems}</ReactMarkdown>
+            
+            <div className="recommendations-content">
+              <h2>Remember 2 Pack: </h2>
+              <ReactMarkdown>{recommendedItems}</ReactMarkdown>
+            </div>
           </section>
         )}
       </main>

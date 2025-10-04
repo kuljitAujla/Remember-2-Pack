@@ -9,6 +9,7 @@ const userAuth = async (req, res, next) => {
 
     try {
         
+        // eslint-disable-next-line no-undef
         const tokenDecoded = jwt.verify(token, process.env.JWT_SECRET);
         
         if (tokenDecoded.id) {

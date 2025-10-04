@@ -36,7 +36,7 @@ export const getUserRecommendations = async (req, res) => {
         const recommendations = await recommendationModel
             .find({ userId })
             .sort({ createdAt: -1 })
-            .select('-aiRecommendations'); // Exclude the full content for list view
+            .select('-aiRecommendations'); // everything but aiRecommendations
 
         res.status(200).json({
             success: true,

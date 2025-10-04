@@ -272,6 +272,90 @@
   color: #ff4757;
 }
 
+/* Password Strength Indicator */
+.password-strength {
+  margin-top: 8px;
+}
+
+.strength-bar {
+  width: 100%;
+  height: 4px;
+  background: #333;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.strength-fill {
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.strength-0 { background: #ff4757; }
+.strength-1 { background: #ff6b7a; }
+.strength-2 { background: #ffa502; }
+.strength-3 { background: #ffdd59; }
+.strength-4 { background: #7bed9f; }
+.strength-5 { background: #2ed573; }
+
+.strength-text {
+  font-size: 0.8rem;
+  color: #B5B5B5;
+  font-weight: 500;
+}
+
+/* Password Requirements */
+.password-requirements {
+  margin-top: 8px;
+  padding: 8px 0;
+}
+
+.requirement {
+  font-size: 0.8rem;
+  margin: 2px 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.requirement.valid {
+  color: #2ed573;
+}
+
+.requirement.invalid {
+  color: #ff4757;
+}
+
+.requirement::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.requirement.valid::before {
+  background: #2ed573;
+  content: '✓';
+  color: white;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.requirement.invalid::before {
+  background: #ff4757;
+  content: '✗';
+  color: white;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .auth-container {

@@ -5,50 +5,97 @@
   color: #EAEAEA;
 }
 
-/* Save Section Styles */
-.recommendations-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* Save Recommendations Section - Subtle */
+.save-recommendations-section {
+  background-color: #1a1f2e;
+  border: 1px solid #2a3441;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 25px auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 50%;
+}
+
+.save-section-header {
+  text-align: center;
   margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 15px;
+}
+
+.save-section-header h3 {
+  color: #EAEAEA;
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin: 0 0 8px 0;
+}
+
+.save-section-header p {
+  color: #B0B0B0;
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 400;
 }
 
 .save-section {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: end;
+  gap: 16px;
   flex-wrap: wrap;
+  justify-content: center;
+}
+
+.trip-name-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 250px;
+}
+
+.trip-name-label {
+  color: #EAEAEA;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin: 0;
 }
 
 .trip-title-input {
-  border-radius: 6px;
-  border: 1px solid #333;
-  padding: 8px 12px;
+  border-radius: 8px;
+  border: 2px solid #333;
+  padding: 12px 16px;
   background-color: #1E1E1E;
   color: #EAEAEA;
-  min-width: 200px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  min-width: 250px;
+}
+
+.trip-title-input:focus {
+  outline: none;
+  border-color: #5170ff;
+  background-color: #252525;
 }
 
 .trip-title-input::placeholder {
   color: #888;
+  font-style: italic;
 }
 
 .save-btn {
-  background-color: #17a2b8;
+  background-color: #5170ff;
   color: white;
   border: none;
   border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  min-width: 180px;
+  height: fit-content;
 }
 
 .save-btn:hover:not(:disabled) {
-  background-color: #138496;
+  background-color: #3a58e5;
 }
 
 .save-btn:disabled {
@@ -56,20 +103,152 @@
   cursor: not-allowed;
 }
 
+.recommendations-content {
+  margin-top: 20px;
+  max-width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.recommendations-content h2 {
+  color: #EAEAEA;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.recommendations-content h1,
+.recommendations-content h2,
+.recommendations-content h3,
+.recommendations-content h4,
+.recommendations-content h5,
+.recommendations-content h6 {
+  color: #EAEAEA;
+  text-align: left;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.recommendations-content h1:first-of-type,
+.recommendations-content h2:first-of-type,
+.recommendations-content h3:first-of-type,
+.recommendations-content h4:first-of-type,
+.recommendations-content h5:first-of-type,
+.recommendations-content h6:first-of-type {
+  margin-top: 0;
+}
+
+.recommendations-content ul,
+.recommendations-content ol {
+  text-align: left;
+  margin-bottom: 15px;
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.recommendations-content li {
+  color: #CCCCCC;
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+.recommendations-content p {
+  text-align: left;
+  margin-bottom: 15px;
+  color: #CCCCCC;
+}
+
+/* Loading Spinner Styles */
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+button.loading {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+button.loading:hover {
+  transform: none;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .recommendations-header {
-    flex-direction: column;
-    align-items: stretch;
+  .save-recommendations-section {
+    padding: 16px;
+    margin: 25px 0;
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .save-section-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .save-section-header p {
+    font-size: 0.9rem;
   }
   
   .save-section {
     flex-direction: column;
     align-items: stretch;
+    gap: 16px;
+  }
+  
+  .trip-name-group {
+    min-width: unset;
   }
   
   .trip-title-input {
     min-width: unset;
     width: 100%;
+  }
+  
+  .save-btn {
+    min-width: unset;
+    width: 100%;
+    padding: 12px 20px;
+  }
+  
+  .recommendations-content {
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0 16px;
+  }
+  
+  .recommendations-content h2 {
+    font-size: 1.3rem;
+  }
+  
+  .recommendations-content h1,
+  .recommendations-content h2,
+  .recommendations-content h3,
+  .recommendations-content h4,
+  .recommendations-content h5,
+  .recommendations-content h6 {
+    font-size: 1.1rem;
+    margin-top: 20px;
+  }
+  
+  .recommendations-content ul,
+  .recommendations-content ol {
+    padding-left: 16px;
   }
 }

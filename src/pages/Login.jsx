@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/auth.css';
 
@@ -11,7 +11,34 @@ export default function Login() {
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const navigate = useNavigate();
+
+  // Check if user is already authenticated when component loads
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/is-auth', {
+          method: 'POST',
+          credentials: 'include',
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          // User is already authenticated, redirect to dashboard
+          navigate('/app', { replace: true });
+          return;
+        }
+        // User is not authenticated, show login form
+        setCheckingAuth(false);
+      } catch (error) {
+        // Error checking auth, show login form
+        setCheckingAuth(false);
+      }
+    };
+
+    checkAuth();
+  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({
@@ -70,6 +97,32 @@ export default function Login() {
       setLoading(false);
     }
   };
+
+  // Show loading state while checking authentication
+  if (checkingAuth) {
+    return (
+      <div className="auth-page">
+        <div className="auth-container">
+          <div className="auth-header">
+            <div className="auth-logo">R2P</div>
+            <h1 className="auth-title">Checking Authentication...</h1>
+            <p className="auth-subtitle">Please wait while we verify your session</p>
+          </div>
+          <div style={{ textAlign: 'center', padding: '20px' }}>
+            <div style={{ 
+              width: '40px', 
+              height: '40px', 
+              border: '4px solid #f3f3f3', 
+              borderTop: '4px solid #3498db', 
+              borderRadius: '50%', 
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto'
+            }}></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-page">

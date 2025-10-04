@@ -13,13 +13,44 @@ export default function Signup() {
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordErrors, setPasswordErrors] = useState([]);
   const navigate = useNavigate();
 
+  // Password validation function
+  const validatePassword = (password) => {
+    const errors = [];
+
+    if (password.length < 8) {
+      errors.push('At least 8 characters');
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push('One uppercase letter');
+    }
+    if (!/[a-z]/.test(password)) {
+      errors.push('One lowercase letter');
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push('One number');
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      errors.push('One special character');
+    }
+
+    return { errors };
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+
+    // Real-time password validation
+    if (name === 'password') {
+      const { errors } = validatePassword(value);
+      setPasswordErrors(errors);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -42,10 +73,14 @@ export default function Signup() {
       setMessage('Password is required');
       return;
     }
-    if (formData.password.length < 6) {
-      setMessage('Password must be at least 6 characters');
+    
+    // Check password requirements
+    const { errors } = validatePassword(formData.password);
+    if (errors.length > 0) {
+      setMessage('Password requirements: ' + errors.join(', '));
       return;
     }
+    
     if (!formData.confirmPassword) {
       setMessage('Please confirm your password');
       return;
@@ -152,6 +187,27 @@ export default function Signup() {
                 {showPassword ? 'Hide' : 'Show'}
               </span>
             </div>
+            
+            {/* Password Requirements */}
+            {formData.password && (
+              <div className="password-requirements">
+                <div className={`requirement ${formData.password.length >= 8 ? 'valid' : 'invalid'}`}>
+                  ✓ At least 8 characters
+                </div>
+                <div className={`requirement ${/[A-Z]/.test(formData.password) ? 'valid' : 'invalid'}`}>
+                  ✓ One uppercase letter
+                </div>
+                <div className={`requirement ${/[a-z]/.test(formData.password) ? 'valid' : 'invalid'}`}>
+                  ✓ One lowercase letter
+                </div>
+                <div className={`requirement ${/[0-9]/.test(formData.password) ? 'valid' : 'invalid'}`}>
+                  ✓ One number
+                </div>
+                <div className={`requirement ${/[!@#$%^&*(),.?":{}|<>]/.test(formData.password) ? 'valid' : 'invalid'}`}>
+                  ✓ One special character
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="form-group">
