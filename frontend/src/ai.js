@@ -2,13 +2,18 @@
 
 export async function getRecommendationsFromAI(packedItems, tripSummary) {
   try {
-    const res = await fetch("/api/recommend", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/recommend`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: 'include', // Important for sending authentication cookies
       body: JSON.stringify({ packedItems, tripSummary })
     });
 
-    if (!res.ok) throw new Error("API request failed");
+    if (!res.ok) {
+      const errorData = await res.json();
+      console.error("API request failed:", errorData);
+      throw new Error(errorData.message || "API request failed");
+    }
 
     const data = await res.json();
 

@@ -18,7 +18,7 @@ export default function Login() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('/api/auth/is-auth', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/is-auth`, {
           method: 'POST',
           credentials: 'include',
         });
@@ -68,7 +68,7 @@ export default function Login() {
     setMessage('');
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

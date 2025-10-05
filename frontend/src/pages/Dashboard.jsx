@@ -56,7 +56,7 @@ export default function Dashboard() {
     setSaving(true);
     
     try {
-      const response = await fetch('/api/recommendations/save', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/recommendations/save`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

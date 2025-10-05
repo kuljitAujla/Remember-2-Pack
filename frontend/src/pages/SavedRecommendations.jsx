@@ -16,7 +16,7 @@ export default function SavedRecommendations() {
   const fetchRecommendations = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/recommendations', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/recommendations`, {
         credentials: 'include'
       });
       
@@ -35,7 +35,7 @@ export default function SavedRecommendations() {
 
   const fetchFullRecommendation = async (id) => {
     try {
-      const response = await fetch(`/api/recommendations/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/recommendations/${id}`, {
         credentials: 'include'
       });
       
@@ -52,7 +52,7 @@ export default function SavedRecommendations() {
 
   const deleteRecommendation = async (id) => {
     try {
-      const response = await fetch(`/api/recommendations/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/recommendations/${id}`, {
         method: 'DELETE',
         credentials: 'include'
       });

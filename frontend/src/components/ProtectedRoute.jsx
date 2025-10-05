@@ -7,7 +7,7 @@ function ProtectedRoute() {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch('/api/auth/is-auth', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/is-auth`, {
           method: 'POST',
           credentials: 'include',
         })

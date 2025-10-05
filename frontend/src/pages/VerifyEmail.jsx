@@ -15,7 +15,7 @@ export default function VerifyEmail() {
   useEffect(() => {
     const sendOtp = async () => {
       try {
-        await fetch('/api/auth/send-verify-otp', {
+        await fetch(`${import.meta.env.VITE_API_URL}/api/auth/send-verify-otp`, {
           method: 'POST',
           credentials: 'include'
         });
@@ -46,7 +46,7 @@ export default function VerifyEmail() {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/auth/verify-account', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/verify-account`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export default function VerifyEmail() {
   const handleResendOTP = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/auth/send-verify-otp', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/send-verify-otp`, {
         method: 'POST',
         credentials: 'include'
       });
