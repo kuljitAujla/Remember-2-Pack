@@ -156,54 +156,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Social Proof Section */}
-      <section className="social-proof">
-        <div className="section-header">
-          <h2 className="section-title">Trusted by travelers worldwide</h2>
-        </div>
-        
-        <div className="testimonials">
-          <div className="testimonial">
-            <div className="testimonial-content">
-              "Finally, an app that actually remembers what I forget! Saved me from forgetting my phone charger on 3 trips."
-            </div>
-            <div className="testimonial-author">
-              <div className="author-avatar">👩</div>
-              <div className="author-info">
-                <div className="author-name">Sarah M.</div>
-                <div className="author-role">Frequent Traveler</div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="testimonial">
-            <div className="testimonial-content">
-              "The AI recommendations are spot-on. It suggested items I never would have thought of for my hiking trip."
-            </div>
-            <div className="testimonial-author">
-              <div className="author-avatar">👨</div>
-              <div className="author-info">
-                <div className="author-name">Mike R.</div>
-                <div className="author-role">Adventure Seeker</div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="testimonial">
-            <div className="testimonial-content">
-              "Perfect for business travel. Never forget my laptop charger or presentation materials again!"
-            </div>
-            <div className="testimonial-author">
-              <div className="author-avatar">👩</div>
-              <div className="author-info">
-                <div className="author-name">Jennifer L.</div>
-                <div className="author-role">Business Professional</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Final CTA Section */}
       <section className="final-cta">
         <div className="cta-content">
