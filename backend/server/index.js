@@ -39,21 +39,6 @@ app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api", userRoutes);
 
-// serve frontend static files (only in production)
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, "../../frontend/dist")));
-
-  // Catch-all handler: send back React's index.html file for any non-API routes
-  // This is essential for React Router to work properly
-  app.use((req, res, next) => {
-    // Skip if it's an API route
-    if (req.path.startsWith('/api/')) {
-      return next();
-    }
-    res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
-  });
-}
-
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
