@@ -133,17 +133,38 @@ remember-2-pack/
 ## Tech Stack
 
 ### Frontend
-- React 19 - Modern UI library
-- Vite - Fast build tool and dev server
-- React Router - Client-side routing
-- React Markdown - Markdown rendering for AI responses
+- **React 19** — Modern UI library for building interactive components  
+- **Vite** — Fast development and build tool  
+- **React Router** — Client-side routing for seamless navigation  
+- **React Markdown** — Renders AI-generated responses in formatted markdown  
 
 ### Backend
-- Node.js - JavaScript runtime
-- Express.js - Web framework
-- MongoDB - Database with Mongoose ODM
-- JWT - Authentication tokens
-- Nodemailer - Email functionality
+- **Node.js** — JavaScript runtime environment  
+- **Express.js** — Web framework for handling routes and APIs  
+- **MongoDB** — NoSQL database managed with Mongoose ODM  
+- **JWT** — JSON Web Tokens for secure authentication  
+- **Bcrypt.js** — Password hashing for user security  
+
+### Integrations & Services
+- **Resend (SMTP)** — Transactional email delivery (used for verification & password reset)  
+- **Dotenv** — Environment variable management  
+- **CORS** — Cross-origin resource configuration  
+
+### Hosting & Deployment
+- **Render** — Hosting for both frontend and backend  
+- **GoDaddy** — Domain registration and forwarding  
+
+### Development Tools
+
+- **VS Code** — Main code editor for full-stack development  
+- **Postman** — API testing and debugging  
+- **MongoDB Atlas** — GUI for visualizing and managing database data  
+- **Render Logs** — Monitoring backend requests and deployments  
+- **Cookie Editor (Chrome Extension)** — Testing authentication cookies and session persistence  
+- **ChatGPT** — Debugging assistance and UI refinement
+- **Git & GitHub** — Version control
+
+
 
 ### AI Integration
 - Anthropic Claude - Primary AI for recommendations
@@ -188,13 +209,17 @@ remember-2-pack/
 
 2. Configure environment variables:
    ```env
-   MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret_key
-   CLIENT_URL=https://your-frontend-domain.com
-   ANTHROPIC_API_KEY=your_anthropic_api_key
-   HUGGINGFACE_API_KEY=your_huggingface_api_key
-   NODEMAILER_EMAIL=your_email
-   NODEMAILER_PASSWORD=your_app_password
+   MONGODB_URI='your_mongodb_connection_string'
+   JWT_SECRET='your_jwt_secret_key'
+   NODE_ENV='development'
+   SMTP_USER='based on your SMTP provider'
+   SMTP_PASS='based on your SMTP provider'
+   SENDER_EMAIL_OTP_VERIFY="otp-verification@your-domain.com"
+   SENDER_EMAIL_OTP_RESET="otp-reset@your-domain.com"
+   SENDER_EMAIL_WELCOME="welcome@your-domain.com"
+   HF_API_KEY=hf_key
+   ANTHROPIC_API_KEY=anthropic-key
+   FRONTEND_URL=frontend-url
    ```
 
 3. Deploy your backend code
