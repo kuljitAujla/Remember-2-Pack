@@ -240,7 +240,7 @@
   transform: translate(-50%, -50%);
   width: 20px;
   height: 20px;
-  border: 2px solid transparent;
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-top: 2px solid white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -249,6 +249,32 @@
 @keyframes spin {
   0% { transform: translate(-50%, -50%) rotate(0deg); }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Standalone loading spinner */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-spinner.large {
+  width: 40px;
+  height: 40px;
+  border-width: 4px;
+}
+
+.loading-spinner.primary {
+  border: 2px solid rgba(81, 112, 255, 0.3);
+  border-top: 2px solid #5170ff;
+}
+
+.loading-spinner.primary.large {
+  border-width: 4px;
 }
 
 /* Success/Error Messages */

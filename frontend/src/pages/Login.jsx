@@ -109,15 +109,7 @@ export default function Login() {
             <p className="auth-subtitle">Please wait while we verify your session</p>
           </div>
           <div style={{ textAlign: 'center', padding: '20px' }}>
-            <div style={{ 
-              width: '40px', 
-              height: '40px', 
-              border: '4px solid #f3f3f3', 
-              borderTop: '4px solid #3498db', 
-              borderRadius: '50%', 
-              animation: 'spin 1s linear infinite',
-              margin: '0 auto'
-            }}></div>
+            <div className="loading-spinner primary large"></div>
           </div>
         </div>
       </div>
