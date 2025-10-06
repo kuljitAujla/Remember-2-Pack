@@ -34,16 +34,16 @@ export default function Landing() {
           </p>
           <div className="hero-stats">
             <div className="stat">
-              <span className="stat-number">10K+</span>
-              <span className="stat-label">Happy Travelers</span>
+              <span className="stat-number">100%</span>
+              <span className="stat-label">Sensative Data Encrypted</span>
             </div>
             <div className="stat">
-              <span className="stat-number">95%</span>
-              <span className="stat-label">Success Rate</span>
+              <span className="stat-number">5★</span>
+              <span className="stat-label">Packing Experience</span>
             </div>
             <div className="stat">
-              <span className="stat-number">50+</span>
-              <span className="stat-label">Destinations</span>
+              <span className="stat-number">20+</span>
+              <span className="stat-label">Average Minutes Saved on Packing</span>
             </div>
           </div>
           <div className="cta-buttons">
