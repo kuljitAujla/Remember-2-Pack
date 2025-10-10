@@ -1,11 +1,8 @@
 /* global process */
-import Anthropic from "@anthropic-ai/sdk";
 import dotenv from "dotenv";
+import { callAI, AI_CONFIG } from "../services/aiService.js";
+
 dotenv.config();
-
-  const HF_API_KEY = process.env.HF_API_KEY;
-  const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-
 
 const SYSTEM_PROMPT = `
 You are an assistant that receives a list of items a user has already packed and suggests what other items they should pack. 
@@ -19,84 +16,47 @@ You are an assistant that receives a list of items a user has already packed and
 - ALWAYS have bulletpoints under each section.
 `;
 
-export const generateRecommendations = async (packedItems, tripSummary, instructions ='', previousResponse='') => {
-
+export const generateRecommendations = async (packedItems, tripSummary, instructions = '', previousResponse = '') => {
   const INPUT_PROMPT = `
   User: I have ${packedItems}. Trip details are: ${tripSummary}.
   Please assist with my packing by recommending what to bring.
   `;
 
-  const INSTRUCTION = `
+  const INSTRUCTION = instructions ? `
   You have already given me a response of ${previousResponse} which is good. However, I have additional instructions as the items needed more refinement.
   Please keep the markdown and content the same, but implement these instructions: ${instructions}
-  `
+  ` : '';
 
-  try {
-    console.log("hf api");
-    const hfResponse = await fetch(
-      "https://router.huggingface.co/v1/chat/completions",
-      {
-        headers: {
-          Authorization: `Bearer ${HF_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify({
-          model: "meta-llama/Llama-3.1-8B-Instruct",
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            { role: "user", content: `${INPUT_PROMPT} ${instructions ? INSTRUCTION : ''}` },
-          ],
-          max_tokens: 2048,
-        }),
-      }
-    );
+  const fullPrompt = `${SYSTEM_PROMPT}\n\n${INPUT_PROMPT}${INSTRUCTION}`;
 
-    if (!hfResponse.ok) {
-      throw new Error("HF request failed");
-    }
-
-    const hfData = await hfResponse.json();
-    console.log(hfData)
-    return hfData
-  } catch (err) {
-    console.error("HF failed, falling back to CLAUDE:", err.message);
-
-    try {
-      console.log("claude api");
-
-      const anthropic = new Anthropic({
-        apiKey: ANTHROPIC_API_KEY,
-      });
-
-      const msg = await anthropic.messages.create({
-        model: "claude-3-5-haiku-20241022",
-        max_tokens: 1024,
-        messages: [
-          {
-            role: "user",
-            content: `You, the ai are ${SYSTEM_PROMPT}, thus ensure to act like it and give welcome like messages. ${INPUT_PROMPT} ${instructions ? INSTRUCTION : ''}`,
-          },
-        ],
-      });
-
-      return msg;
-    } catch (claudeErr) {
-      console.error("Claude also failed:", claudeErr.message);
-      throw new Error("Both have failed")
-    }
-  }
+  return await callAI(fullPrompt, { 
+    maxTokens: AI_CONFIG.MAX_TOKENS.EXTENDED 
+  });
 };
 
 export const recommendController = async (req, res) => {
-
   const { packedItems, tripSummary } = req.body;
   
-  try {
-    const msg = await generateRecommendations(packedItems, tripSummary);
-    return res.json(msg)
-  } catch (error) {
-    return res.status(500).json({ error: error.message})
+  if (!packedItems || !tripSummary || 
+      typeof packedItems !== 'string' || 
+      typeof tripSummary !== 'string') {
+    return res.status(400).json({ 
+      success: false, 
+      error: "Invalid or missing required fields" 
+    });
   }
-  
+
+  try {
+    const recommendations = await generateRecommendations(packedItems, tripSummary);
+    return res.json({ 
+      success: true, 
+      recommendations 
+    });
+  } catch (error) {
+    console.error("Error generating recommendations:", error);
+    return res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
 };

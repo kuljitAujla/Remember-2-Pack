@@ -12,21 +12,18 @@ export async function getRecommendationsFromAI(packedItems, tripSummary) {
     if (!res.ok) {
       const errorData = await res.json();
       console.error("API request failed:", errorData);
-      throw new Error(errorData.message || "API request failed");
+      throw new Error(errorData.error || "API request failed");
     }
 
     const data = await res.json();
 
-    // Normalize Hugging Face vs Claude response
-    if (data.choices) {
-      // Hugging Face (OpenAI-style response)
-      return data.choices[0]?.message?.content || "No response";
-    } else if (data.content) {
-      // Claude response
-      return data.content[0]?.text || "No response";
-    } else {
-      return data.text || "No response";
+    if (!data.success) {
+      throw new Error(data.error || "Failed to generate recommendations");
     }
+
+    // Backend now returns clean { success: true, recommendations: "string" }
+    return data.recommendations || "No response";
+
   } catch (err) {
     console.error("Frontend API call failed:", err.message);
     return "Sorry, could not generate recommendations.";
