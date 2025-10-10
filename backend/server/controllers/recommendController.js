@@ -19,13 +19,17 @@ You are an assistant that receives a list of items a user has already packed and
 - ALWAYS have bulletpoints under each section.
 `;
 
-export const recommendController = async (req, res) => {
+export const generateRecommendations = async (packedItems, tripSummary, instructions ='', previousResponse='') => {
 
-  const { packedItems, tripSummary } = req.body;
   const INPUT_PROMPT = `
   User: I have ${packedItems}. Trip details are: ${tripSummary}.
   Please assist with my packing by recommending what to bring.
   `;
+
+  const INSTRUCTION = `
+  You have already given me a response of ${previousResponse} which is good. However, I have additional instructions as the items needed more refinement.
+  Please keep the markdown and content the same, but implement these instructions: ${instructions}
+  `
 
   try {
     console.log("hf api");
@@ -41,7 +45,7 @@ export const recommendController = async (req, res) => {
           model: "meta-llama/Llama-3.1-8B-Instruct",
           messages: [
             { role: "system", content: SYSTEM_PROMPT },
-            { role: "user", content: INPUT_PROMPT },
+            { role: "user", content: `${INPUT_PROMPT} ${instructions ? INSTRUCTION : ''}` },
           ],
           max_tokens: 2048,
         }),
@@ -54,7 +58,7 @@ export const recommendController = async (req, res) => {
 
     const hfData = await hfResponse.json();
     console.log(hfData)
-    return res.json(hfData);
+    return hfData
   } catch (err) {
     console.error("HF failed, falling back to CLAUDE:", err.message);
 
@@ -71,15 +75,28 @@ export const recommendController = async (req, res) => {
         messages: [
           {
             role: "user",
-            content: `You, the ai are ${SYSTEM_PROMPT}, thus ensure to act like it and give welcome like messages. ${INPUT_PROMPT}`,
+            content: `You, the ai are ${SYSTEM_PROMPT}, thus ensure to act like it and give welcome like messages. ${INPUT_PROMPT} ${instructions ? INSTRUCTION : ''}`,
           },
         ],
       });
 
-      return res.json(msg);
+      return msg;
     } catch (claudeErr) {
       console.error("Claude also failed:", claudeErr.message);
-      return res.status(500).json({ error: "Both HF and Claude failed" });
+      throw new Error("Both have failed")
     }
   }
+};
+
+export const recommendController = async (req, res) => {
+
+  const { packedItems, tripSummary } = req.body;
+  
+  try {
+    const msg = await generateRecommendations(packedItems, tripSummary);
+    return res.json(msg)
+  } catch (error) {
+    return res.status(500).json({ error: error.message})
+  }
+  
 };
