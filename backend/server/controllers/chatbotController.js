@@ -2,7 +2,7 @@ import { callAI, AI_CONFIG } from "../services/aiService.js";
 import { generateRecommendations } from "./recommendController.js";
 
 export const chatbotQuestionGenerator = async (req, res) => {
-  const { packedItems, tripSummary, userMessage, chatbotHistory } = req.body;
+  const { packedItems, tripSummary, chatbotHistory, aiRecommendations } = req.body;
 
   if (!packedItems || !tripSummary) {
     return res.status(400).json({ 
@@ -29,7 +29,6 @@ Always start your output with "Chatbot: ".
 Context:
 Packed Items: ${packedItems}
 Trip Summary: ${tripSummary}
-${userMessage ? `Recent User Message: ${userMessage}` : ""}
 ${chatbotHistory ? `Your Chat History: ${chatbotHistory}` : ""}
 
 Question should be one to two sentences long, nothing too long or short.

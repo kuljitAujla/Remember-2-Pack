@@ -5,6 +5,6 @@ const chatbotRouter = express.Router();
 
 // Save a new recommendation
 chatbotRouter.post("/generate-question", chatbotQuestionGenerator);
-chatbotRouter.post("/refined-routes", refinedRecommendations);
+chatbotRouter.post("/refined-recommendation", refinedRecommendations);
 
 export default chatbotRouter;
