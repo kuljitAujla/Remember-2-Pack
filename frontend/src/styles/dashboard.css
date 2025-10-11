@@ -103,11 +103,20 @@
   cursor: not-allowed;
 }
 
-.recommendations-content {
+/* Wrapper for side-by-side layout */
+.recommendations-chatbot-wrapper {
+  display: flex;
+  gap: 30px;
   margin-top: 20px;
-  max-width: 70%;
+  max-width: 95%;
   margin-left: auto;
   margin-right: auto;
+  align-items: flex-start;
+}
+
+.recommendations-content {
+  flex: 1;
+  min-width: 0; /* Allows flex item to shrink below its content size */
 }
 
 .recommendations-content h2 {
@@ -159,6 +168,20 @@
   text-align: left;
   margin-bottom: 15px;
   color: #CCCCCC;
+}
+
+/* Chatbot Section in Dashboard */
+.chatbot-section {
+  flex: 0 0 400px; /* Fixed width for chatbot */
+  position: sticky;
+  top: 20px;
+  align-self: flex-start;
+}
+
+.chatbot-section .chatbot-container {
+  margin: 0; /* Override default margin from chatbot.css */
+  max-width: 100%;
+  height: 600px;
 }
 
 /* Loading Spinner Styles */
@@ -250,5 +273,22 @@ button.loading:hover {
   .recommendations-content ul,
   .recommendations-content ol {
     padding-left: 16px;
+  }
+
+  /* Stack recommendations and chatbot on mobile */
+  .recommendations-chatbot-wrapper {
+    flex-direction: column;
+    max-width: 100%;
+    gap: 20px;
+  }
+
+  .chatbot-section {
+    flex: 1;
+    position: static;
+    width: 100%;
+  }
+
+  .chatbot-section .chatbot-container {
+    height: 500px;
   }
 }

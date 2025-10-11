@@ -2,6 +2,7 @@ import React from "react"
 import Header from '../components/Header';
 import PackedList from "../components/PackedList"
 import SaveRecommendations from "../components/SaveRecommendations"
+import Chatbot from "../components/chatbot"
 import ReactMarkdown from "react-markdown"
 import { getRecommendationsFromAI } from "../ai"
 import "../styles/dashboard.css"
@@ -145,9 +146,21 @@ export default function Dashboard() {
             recommendedItems={recommendedItems}
             />
             
-            <div className="recommendations-content">
-              <h2>Remember 2 Pack: </h2>
-              <ReactMarkdown>{recommendedItems}</ReactMarkdown>
+            {/* Recommendations and Chatbot Side-by-Side */}
+            <div className="recommendations-chatbot-wrapper">
+              <div className="recommendations-content">
+                <h2>Remember 2 Pack: </h2>
+                <ReactMarkdown>{recommendedItems}</ReactMarkdown>
+              </div>
+
+              <div className="chatbot-section">
+                <Chatbot 
+                  packedItems={items}
+                  tripSummary={tripSummary}
+                  aiRecommendations={recommendedItems}
+                  onUpdateRecommendations={setRecommendedItems}
+                />
+              </div>
             </div>
 
             <SaveRecommendations 

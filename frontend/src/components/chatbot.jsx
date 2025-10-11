@@ -1,106 +1,136 @@
 import { useState, useRef, useEffect } from "react";
 import "../styles/chatbot.css";
 
-export default function Chatbot({ packedItems, tripSummary, aiRecommendations }) {
+export default function Chatbot({ packedItems, tripSummary, aiRecommendations, onUpdateRecommendations }) {
   const inputRef = useRef(null);
   const messagesEndRef = useRef(null);
+  
+  // State
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentRecommendations, setCurrentRecommendations] = useState(aiRecommendations);
+  const [hasAskedInitialQuestion, setHasAskedInitialQuestion] = useState(false);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]);
+  }, [messages]);
+
+  // Sync with parent recommendations
+  useEffect(() => {
+    setCurrentRecommendations(aiRecommendations);
+  }, [aiRecommendations]);
+
+  // Ask initial question once when component loads
+  useEffect(() => {
+    if (hasAskedInitialQuestion || !aiRecommendations) return;
+
+    setHasAskedInitialQuestion(true);
+    setIsLoading(true);
+
+    fetch(`${import.meta.env.VITE_API_URL}/api/chatbot/generate-question`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        packedItems,
+        tripSummary,
+        chatbotHistory: "",
+        aiRecommendations,
+      }),
+      credentials: "include",
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          addMessage("chatbot", data.question);
+        } else {
+          addMessage("chatbot", "Hi! I'm here to help refine your packing list.");
+        }
+      })
+      .catch(error => {
+        console.error("Initial question error:", error);
+        addMessage("chatbot", "Hi! I'm here to help refine your packing list.");
+      })
+      .finally(() => setIsLoading(false));
+  }, [hasAskedInitialQuestion, aiRecommendations, packedItems, tripSummary]);
 
   const addMessage = (sender, text) => {
-    const message = {
-      sender: sender,
-      message: text,
-    };
-    setMessages((prev) => [...prev, message]);
+    setMessages(prev => [...prev, { sender, message: text }]);
   };
 
-  const getChatHistory = (includedMessages) => {
-    return includedMessages
-      .map((m) => `${m.sender === "user" ? "User" : "Chatbot"}: ${m.message}`)
+  const getChatHistory = (messagesList) => {
+    return messagesList
+      .map(m => `${m.sender === "user" ? "User" : "Chatbot"}: ${m.message}`)
       .join("\n");
   };
 
   const handleSendMessage = async () => {
     const userMessage = inputRef.current.value.trim();
+    if (!userMessage || isLoading) return;
 
-    // Validation: Check if message is not empty
-    if (!userMessage) return;
-
+    // Add user message and clear input
     addMessage("user", userMessage);
     inputRef.current.value = "";
     setIsLoading(true);
 
-    // Build chat history including current message
+    // Build chat history
     const updatedMessages = [...messages, { sender: "user", message: userMessage }];
     const chatHistory = getChatHistory(updatedMessages);
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/chatbot/generate-question`,
+      // Step 1: Refine recommendations based on user's response
+      const refinedResponse = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/chatbot/refined-recommendation`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             packedItems,
             tripSummary,
-            chatHistory,
-            aiRecommendations,
+            chatbotHistory: chatHistory,
+            aiRecommendations: currentRecommendations,
           }),
           credentials: "include",
         }
       );
 
-      const data = await response.json();
+      const refinedData = await refinedResponse.json();
+      let latestRecommendations = currentRecommendations;
 
-      if (data.success) {
-        addMessage("chatbot", data.question);
+      if (refinedData.success && refinedData.refinedRecommendations) {
+        latestRecommendations = refinedData.refinedRecommendations;
+        setCurrentRecommendations(latestRecommendations);
+        onUpdateRecommendations(latestRecommendations);
+      }
+
+      // Step 2: Generate next chatbot question
+      const questionResponse = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/chatbot/generate-question`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            packedItems,
+            tripSummary,
+            chatbotHistory: chatHistory,
+            aiRecommendations: latestRecommendations,
+          }),
+          credentials: "include",
+        }
+      );
+
+      const questionData = await questionResponse.json();
+
+      if (questionData.success) {
+        addMessage("chatbot", questionData.question);
       } else {
         addMessage("chatbot", "Sorry, I encountered an error. Please try again.");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Chat error:", error);
       addMessage("chatbot", "Sorry, I encountered an error. Please try again.");
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const refineRecommendations = async () => {
-    const chatHistory = getChatHistory(messages);
-
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/chatbot/refined-recommendation`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            packedItems,
-            tripSummary,
-            chatHistory,
-            aiRecommendations,
-          }),
-          credentials: "include",
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        return data.refinedRecommendations;
-      }
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -126,9 +156,7 @@ export default function Chatbot({ packedItems, tripSummary, aiRecommendations })
           messages.map((message, index) => (
             <p
               key={index}
-              className={
-                message.sender === "chatbot" ? "chatbot-msg" : "user-msg"
-              }
+              className={message.sender === "chatbot" ? "chatbot-msg" : "user-msg"}
             >
               {message.message}
             </p>

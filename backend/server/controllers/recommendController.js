@@ -17,6 +17,11 @@ You are an assistant that receives a list of items a user has already packed and
 `;
 
 export const generateRecommendations = async (packedItems, tripSummary, instructions = '', previousResponse = '') => {
+  // If instructions explicitly say no changes needed, return previous response as-is
+  if (instructions && instructions.toLowerCase().includes('no changes needed')) {
+    return previousResponse;
+  }
+
   const INPUT_PROMPT = `
   User: I have ${packedItems}. Trip details are: ${tripSummary}.
   Please assist with my packing by recommending what to bring.
@@ -24,7 +29,8 @@ export const generateRecommendations = async (packedItems, tripSummary, instruct
 
   const INSTRUCTION = instructions ? `
   You have already given me a response of ${previousResponse} which is good. However, I have additional instructions as the items needed more refinement.
-  Please keep the markdown and content the same, but implement these instructions: ${instructions}
+  Please keep the same markdown structure and formatting, but implement these instructions: ${instructions}
+  Make sure to integrate the changes naturally into the existing categories. Don't duplicate content.
   ` : '';
 
   const fullPrompt = `${SYSTEM_PROMPT}\n\n${INPUT_PROMPT}${INSTRUCTION}`;
@@ -37,17 +43,45 @@ export const generateRecommendations = async (packedItems, tripSummary, instruct
 export const recommendController = async (req, res) => {
   const { packedItems, tripSummary } = req.body;
   
-  if (!packedItems || !tripSummary || 
-      typeof packedItems !== 'string' || 
-      typeof tripSummary !== 'string') {
+  // Validate required fields exist
+  if (!packedItems || !tripSummary) {
     return res.status(400).json({ 
       success: false, 
-      error: "Invalid or missing required fields" 
+      error: "Missing required fields: packedItems and tripSummary" 
+    });
+  }
+
+  // Validate tripSummary is a string
+  if (typeof tripSummary !== 'string' || tripSummary.trim() === '') {
+    return res.status(400).json({ 
+      success: false, 
+      error: "tripSummary must be a non-empty string" 
+    });
+  }
+
+  // Convert packedItems to string if it's an array
+  let packedItemsString;
+  if (Array.isArray(packedItems)) {
+    packedItemsString = packedItems.join(', ');
+  } else if (typeof packedItems === 'string') {
+    packedItemsString = packedItems;
+  } else {
+    return res.status(400).json({ 
+      success: false, 
+      error: "packedItems must be a string or array" 
+    });
+  }
+
+  // Check if packedItemsString is not empty
+  if (packedItemsString.trim() === '') {
+    return res.status(400).json({ 
+      success: false, 
+      error: "packedItems cannot be empty" 
     });
   }
 
   try {
-    const recommendations = await generateRecommendations(packedItems, tripSummary);
+    const recommendations = await generateRecommendations(packedItemsString, tripSummary);
     return res.json({ 
       success: true, 
       recommendations 

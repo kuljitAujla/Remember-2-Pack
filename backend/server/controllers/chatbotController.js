@@ -11,28 +11,50 @@ export const chatbotQuestionGenerator = async (req, res) => {
     });
   }
 
+  // Convert packedItems to string if it's an array
+  const packedItemsString = Array.isArray(packedItems) 
+    ? packedItems.join(', ') 
+    : packedItems;
+
   const CHATBOT_PROMPT = `
 You are an intelligent packing refinement assistant for the "Remember-2-Pack" app.
 
 Your task:
-1. Review the user's current packed items and trip summary.
-2. Think briefly about what *might be missing* based on the type, duration, and purpose of their trip. 
-(Consider weather, leisure time, formal events, business needs, hygiene, electronics, cultural context, etc.)
+1. Review the user's trip summary, and the AI recommended items (imagine as if user has already packed these).
+2. Think briefly about what question you can ask based on the type, duration, and purpose of their trip from the recommended packed items to add additional items based on the response. 
+(Consider weather, leisure time, formal events, business needs, hygiene, cultural context, etc.)
 3. Based on this reasoning, ask ONE short, specific, and natural follow-up question 
 that helps fill a meaningful gap in their packing list.
-4. Never repeat a previous question. Use short-term memory from this conversation only.
-5. If there are no obvious gaps, do not push the user with questions, just respond with: 
-"Chatbot: Your packing list seems complete. You can start packing."
+${!chatbotHistory ? `3.5. If user asks you to add or remove something then do not ask a question but say that you have either added it or removed it` : ''}
+4. Never repeat a previous question. Use the chat history to track what you've already asked about.
+5. If the user declined your previous suggestion, move on to a COMPLETELY DIFFERENT category - don't keep asking about the same topic.
+6. If you've covered most categories or the user indicates/implies they don't need more, respond with: 
+"Chatbot: Your packing list looks great! You're all set to start packing." You usually miss this and keep asking questions when user is done so make sure you pay attention to users last message.
 
 Always start your output with "Chatbot: ".
 
 Context:
-Packed Items: ${packedItems}
+${!chatbotHistory ? `Initial Packed Items: ${packedItemsString}` : ''}
 Trip Summary: ${tripSummary}
-${chatbotHistory ? `Your Chat History: ${chatbotHistory}` : ""}
+AI Recommended items which assume are items user has packed (ignore the markdown formatting): ${aiRecommendations}
+${chatbotHistory ? `
+Chat History (where you are "Chatbot"): ${chatbotHistory}
 
-Question should be one to two sentences long, nothing too long or short.
+Important Instructions:
+- If the user's LAST message was affirmative ("yes", "sure", "okay", etc.), acknowledge it naturally (e.g., "Great! I've noted that."). 
+- If the user's LAST message was negative ("no", "not needed", "don't need"), respect it and move to a DIFFERENT topic or conclude
+- Always make sure you respond to the last message and then add the question/response (if users last message implies list is finished then do not add question/response)
+- NEVER ask the same type of question twice
+- Move onto the next topic after items had been added. (do not stay persistent with the same topic, actively try to change topics)
+- Review the full chat history to see what topics you've already covered
+- MAKE SURE If user implies that they already packed everything, reply with something like "Happy to help, just let me know if you'd like to make any changes!"
+` : ""}
+
+Keep your response to one to two sentences maximum.
 `;
+
+console.log(chatbotHistory)
+console.log(aiRecommendations)
 
   try {
     const question = await callAI(CHATBOT_PROMPT, { 
@@ -53,10 +75,9 @@ export async function getChatbotInstruction({
   chatbotHistory, 
   aiRecommendations, 
   packedItems, 
-  tripSummary 
 }) {
-  if (!packedItems || !tripSummary) {
-    throw new Error("Missing required fields: packedItems or tripSummary");
+  if (!packedItems) {
+    throw new Error("Missing required fields: packedItems");
   }
 
   const AI_PROMPT = `
@@ -70,23 +91,24 @@ ${chatbotHistory}
 2. The original AI recommendation (in markdown format) was:
 ${aiRecommendations}
 
-3. Here is the current user context:
-- Packed Items: ${packedItems}
-- Trip Summary: ${tripSummary}
+${!chatbotHistory ? `3. Here is the items user initially packed (make sure these are added in ai recommendations):
+- Packed Items: ${packedItems}` : ''}
+
 
 Your goal:
-- Interpret what *new intent or change* the user expressed in their latest message.
-- Summarize that intent in clear, actionable instructions directed at the recommendation AI.
-- Be explicit about what needs to change in the packing list (add, remove, or modify items).
-- Avoid rephrasing the conversation or chatting — respond *as if you were giving instructions to another AI system*.
+- Look at the LATEST user response in the chat history
+- If the user agreed to add something ("yes", "sure", "okay", etc.) or requested something specific, provide instructions to add those items
+- If the user declined ("no", "I don't need", "not needed", etc.), respond with: "Instruction to Recommendation AI: No changes needed."
+- Be explicit about what needs to change in the packing list (add, remove, or modify items)
+- Avoid rephrasing the conversation or chatting — respond *as if you were giving instructions to another AI system*
 
 Respond in this format:
 "Instruction to Recommendation AI: [concise, direct description of the change]"
 
 Examples:
-- Instruction to Recommendation AI: Add casual clothes and sneakers for a leisure day in New York.
+- Instruction to Recommendation AI: Add power adapters and extension cord for electronics.
 - Instruction to Recommendation AI: Include an umbrella and waterproof shoes due to expected rain.
-- Instruction to Recommendation AI: No changes needed — user confirmed list is complete.
+- Instruction to Recommendation AI: No changes needed.
 `;
 
   return await callAI(AI_PROMPT, { 
@@ -104,16 +126,20 @@ export const refinedRecommendations = async (req, res) => {
     });
   }
 
+  // Convert packedItems to string if it's an array
+  const packedItemsString = Array.isArray(packedItems) 
+    ? packedItems.join(', ') 
+    : packedItems;
+
   try {
     const chatbotInstruction = await getChatbotInstruction({ 
       chatbotHistory, 
       aiRecommendations, 
-      tripSummary, 
-      packedItems 
+      packedItems: packedItemsString 
     });
 
     const refinedMarkdown = await generateRecommendations(
-      packedItems, 
+      packedItemsString, 
       tripSummary, 
       chatbotInstruction, 
       aiRecommendations
