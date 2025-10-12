@@ -38,6 +38,14 @@ export default function Dashboard() {
   }
 
   async function getRecommendedItems() {
+    const tripDetails = tripDetailsRef.current.value.trim()
+    
+    // Check if trip details are provided
+    if (!tripDetails) {
+      alert('Please describe your trip details before generating recommendations.')
+      return
+    }
+    
     setLoadingRecommendations(true)
     try {
       const tripDetails = tripDetailsRef.current.value
@@ -102,9 +110,13 @@ export default function Dashboard() {
         <PackedList listOfItems = {items} />
         
         <div className="purpose-container">
-          <label className="purpose-label">Describe your trip so AI can suggest better items</label>
+          <label className="purpose-label">Describe your trip so AI can suggest better items *</label>
           <small className="purpose-info">Add details like location, length of stay, and activities for better recommendations.</small>
-          <textarea ref={tripDetailsRef} placeholder="e.g. I'm moving into a university dorm for 8 months with a small kitchen but no stove, so I'll need ideas for long-term essentials. Or: I'm going to Atlanta for a week for a wedding, and I might also go sightseeing and shopping at malls during the trip." className="purpose-text"></textarea>
+          <textarea 
+            ref={tripDetailsRef} 
+            placeholder="e.g. I'm moving into a university dorm for 8 months with a small kitchen but no stove, so I'll need ideas for long-term essentials. Or: I'm going to Atlanta for a week for a wedding, and I might also go sightseeing and shopping at malls during the trip." 
+            className="purpose-text"
+          ></textarea>
         </div>
         
         {/* Recommend Essentials Section */}

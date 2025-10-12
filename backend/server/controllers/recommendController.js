@@ -42,22 +42,6 @@ export const generateRecommendations = async (packedItems, tripSummary, instruct
 
 export const recommendController = async (req, res) => {
   const { packedItems, tripSummary } = req.body;
-  
-  // Validate required fields exist
-  if (!packedItems || !tripSummary) {
-    return res.status(400).json({ 
-      success: false, 
-      error: "Missing required fields: packedItems and tripSummary" 
-    });
-  }
-
-  // Validate tripSummary is a string
-  if (typeof tripSummary !== 'string' || tripSummary.trim() === '') {
-    return res.status(400).json({ 
-      success: false, 
-      error: "tripSummary must be a non-empty string" 
-    });
-  }
 
   // Convert packedItems to string if it's an array
   let packedItemsString;
@@ -72,11 +56,11 @@ export const recommendController = async (req, res) => {
     });
   }
 
-  // Check if packedItemsString is not empty
-  if (packedItemsString.trim() === '') {
+  // Validate that trip summary is provided
+  if (!tripSummary || tripSummary.trim() === '') {
     return res.status(400).json({ 
       success: false, 
-      error: "packedItems cannot be empty" 
+      error: 'Trip summary is required. Please describe your trip details before generating recommendations.' 
     });
   }
 
