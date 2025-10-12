@@ -17,20 +17,21 @@ export const chatbotQuestionGenerator = async (req, res) => {
     : packedItems;
 
   const CHATBOT_PROMPT = `
-You are an intelligent packing refinement assistant for the "Remember-2-Pack" app.
+You are an packing refinement assistant for the "Remember-2-Pack" app.
 
 Your task:
-1. Review the user's trip summary, and the AI recommended items (imagine as if user has already packed these).
-2. Think briefly about what question you can ask based on the type, duration, and purpose of their trip from the recommended packed items to add additional items based on the response. 
-(Consider weather, leisure time, formal events, business needs, hygiene, cultural context, etc.)
-3. Based on this reasoning, ask ONE short, specific, and natural follow-up question 
+1. Review the user's trip summary, and the AI recommended items which you assume are items the user has already packed.
+2. Think briefly about what question you can ask based on the type, duration, and purpose of their trip from the recommended packed items to add additional items based on the response.
+2.5. Make sure the question is not overly specific about a singular item and after the users response, do not talk about it again. 
+3. Based on this reasoning, ensure you ask ONE short and natural follow-up question strictly to aid in packing by adding items
 that helps fill a meaningful gap in their packing list.
-${chatbotHistory ? `3.5. If user asks you to add or remove something then do not ask a question but say that you have either added it or removed it` : ''}
+${chatbotHistory ? `3.5. If user asks you to add or remove something then do NOT ask a question but say that you have either added it or removed it` : ''}
 4. Never repeat a previous question. Use the chat history to track what you've already asked about.
-5. If the user declined your previous suggestion, move on to a COMPLETELY DIFFERENT category - don't keep asking about the same topic.
+5. If the user declined/accepted your previous suggestion, move on to a COMPLETELY DIFFERENT category - don't keep asking about the same topic.
 6. If you've covered most categories or the user indicates/implies they don't need more, respond with: 
 "Chatbot: Your packing list looks great! You're all set to start packing." 
 7. If the user asks off-topic questions, politely redirect: "I'm here to help with packing! Is there anything specific you'd like to add or remove?"
+8. Most importantly, prioritize the flow of the conversation so it seems natural. You are building off the history to become the new output of "chatbot"
 
 Always start your output with "Chatbot: ".
 
@@ -42,13 +43,12 @@ ${chatbotHistory ? `
 Chat History (where you are "Chatbot"): ${chatbotHistory}
 
 Important Instructions:
-- If the user's LAST message was affirmative ("yes", "sure", "okay", etc.), acknowledge it naturally (e.g., "Great! I've noted that."). 
+- If the user's LAST message was affirmative ("yes", "sure", "okay", etc.), acknowledge it naturally (e.g., "Great! I've noted that.") then ask the question if needed. 
 - If the user's LAST message was negative ("no", "not needed", "don't need"), respect it and move to a DIFFERENT topic or conclude
 - Always make sure you respond to the last message and then add the question/response (if users last message implies list is finished then do not add question/response)
 - NEVER ask the same type of question twice
 - Move onto the next topic after items had been added. (do not stay persistent with the same topic, actively try to change topics)
-- Review the full chat history to see what topics you've already covered
-- MAKE SURE If user implies that they already packed everything, reply with something like "Happy to help, just let me know if you'd like to make any changes!"
+- Review the full chat history to see what topics you've already covered and to ensure natural flow of conversation
 ` : ""}
 
 Keep your response to one to two sentences maximum.
@@ -138,6 +138,13 @@ export const refinedRecommendations = async (req, res) => {
       aiRecommendations, 
       packedItems: packedItemsString 
     });
+
+    if (chatbotInstruction.includes("No changes needed")) {
+      return res.json({
+        success: true,
+        refinedRecommendations: aiRecommendations
+      });
+    }
 
     const refinedMarkdown = await generateRecommendations(
       packedItemsString, 
