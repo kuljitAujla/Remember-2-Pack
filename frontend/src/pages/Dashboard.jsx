@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [tripSummary, setTripSummary] = React.useState("")
   const [title, setTitle] = React.useState("My Trip")
   const [saving, setSaving] = React.useState(false)
+  const [saved, setSaved] = React.useState(false)
   const [loadingRecommendations, setLoadingRecommendations] = React.useState(false)
   const [selectedImage, setSelectedImage] = React.useState(null)
   const [imageSaved, setImageSaved] = React.useState(false)
@@ -62,6 +63,7 @@ export default function Dashboard() {
     }
     
     setLoadingRecommendations(true)
+    setSaved(false) // Reset saved state when generating new recommendations
     try {
       const tripDetails = tripDetailsRef.current.value
       const generatedRecommendationMarkdown = await getRecommendationsFromAI(items, tripDetails)
@@ -125,10 +127,13 @@ export default function Dashboard() {
       if (!response.ok) {
         throw new Error('Failed to save recommendation');
       }
+      
+      // Set saved state and stop showing loading spinner
+      setSaving(false);
+      setSaved(true);
     } catch (error) {
       console.error('Save failed:', error);
-    } finally {
-      setSaving(false);
+      setSaving(false); // Re-enable on error
     }
   };
 
@@ -221,6 +226,7 @@ export default function Dashboard() {
             setTitle={setTitle}
             handleSave={handleSave}
             saving={saving}
+            saved={saved}
             recommendedItems={recommendedItems}
             />
             
@@ -246,6 +252,7 @@ export default function Dashboard() {
             setTitle={setTitle}
             handleSave={handleSave}
             saving={saving}
+            saved={saved}
             recommendedItems={recommendedItems}
             />
           </section>

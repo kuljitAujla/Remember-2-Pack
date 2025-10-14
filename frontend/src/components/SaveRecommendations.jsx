@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function SaveRecommendations({ title, setTitle, handleSave, saving, recommendedItems }) {
+export default function SaveRecommendations({ title, setTitle, handleSave, saving, saved, recommendedItems }) {
   return (
     <div className="save-recommendations-section">
       <div className="save-section-header">
@@ -21,13 +21,17 @@ export default function SaveRecommendations({ title, setTitle, handleSave, savin
         </div>
         <button 
           onClick={handleSave}
-          disabled={saving || !recommendedItems}
-          className="save-btn"
+          disabled={saving || saved || !recommendedItems}
+          className={`save-btn ${saved ? 'saved' : ''}`}
         >
           {saving ? (
             <>
               <span className="loading-spinner"></span>
               Saving...
+            </>
+          ) : saved ? (
+            <>
+              Saved
             </>
           ) : (
             <>
