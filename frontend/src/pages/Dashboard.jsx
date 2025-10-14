@@ -16,18 +16,29 @@ export default function Dashboard() {
   const [saved, setSaved] = React.useState(false)
   const [loadingRecommendations, setLoadingRecommendations] = React.useState(false)
   const [selectedImage, setSelectedImage] = React.useState(null)
-  const [imageSaved, setImageSaved] = React.useState(false)
+  const [tempImageKey, setTempImageKey] = React.useState(null)
+  const [uploadingImage, setUploadingImage] = React.useState(false)
 
   const recommendedEssentials = React.useRef(null)
   const tripDetailsRef = React.useRef(null)
   const itemInputRef = React.useRef(null)
   const fileInputRef = React.useRef(null)
+  const cleanupTimerRef = React.useRef(null)
 
   React.useEffect(() => {
     if (recommendedItems !== "" && recommendedEssentials !== null) {
       recommendedEssentials.current.scrollIntoView({behavior: "smooth"})
     }
   }, [recommendedItems])
+
+  // Cleanup timer on unmount
+  React.useEffect(() => {
+    return () => {
+      if (cleanupTimerRef.current) {
+        clearTimeout(cleanupTimerRef.current)
+      }
+    }
+  }, [])
 
   function addItem(formData) {
     const newItem = formData.get("item")
@@ -45,11 +56,69 @@ export default function Dashboard() {
     fileInputRef.current?.click()
   }
 
-  function handleImageSelect(event) {
+  async function handleImageSelect(event) {
     const file = event.target.files?.[0]
-    if (file && file.type.startsWith('image/')) {
-      setSelectedImage(file)
-      setImageSaved(false) // Reset saved state when new image is selected
+    if (!file || !file.type.startsWith('image/')) {
+      return;
+    }
+
+    setSelectedImage(file)
+    setUploadingImage(true)
+
+    try {
+      // Upload to S3 temp folder and get detected items
+      const formData = new FormData()
+      formData.append('image', file)
+      
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/image/upload-image`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to upload image')
+      }
+
+      const data = await response.json()
+      
+      // Store temp key for later confirmation or deletion
+      setTempImageKey(data.key)
+
+      // Add detected items to the packed list
+      if (data.detectedItems && data.detectedItems.length > 0) {
+        const itemNames = data.detectedItems.map(item => item.name)
+        setItems(prevItems => [...prevItems, ...itemNames])
+      }
+
+      // Start 20-minute cleanup timer
+      if (cleanupTimerRef.current) {
+        clearTimeout(cleanupTimerRef.current)
+      }
+      
+      cleanupTimerRef.current = setTimeout(async () => {
+        // Delete temp image after 20 minutes if not saved
+        try {
+          await fetch(`${import.meta.env.VITE_API_URL}/api/image/cancel-upload`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ tempKey: data.key })
+          })
+          setTempImageKey(null)
+          setSelectedImage(null)
+          console.log('Temp image deleted after 20 minutes')
+        } catch (error) {
+          console.error('Failed to delete temp image:', error)
+        }
+      }, 20 * 60 * 1000) // 20 minutes
+
+    } catch (error) {
+      console.error('Failed to upload image:', error)
+      alert('Failed to upload and analyze image. Please try again.')
+      setSelectedImage(null)
+    } finally {
+      setUploadingImage(false)
     }
   }
 
@@ -83,28 +152,32 @@ export default function Dashboard() {
     let imageKey = null;
     
     try {
-      // Upload image to S3 first if one is selected
-      if (selectedImage && !imageSaved) {
-        const formData = new FormData();
-        formData.append('image', selectedImage);
-        
-        const imageResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/image/upload-image`, {
+      // Clear the cleanup timer since we're saving
+      if (cleanupTimerRef.current) {
+        clearTimeout(cleanupTimerRef.current)
+        cleanupTimerRef.current = null
+      }
+
+      // If image was uploaded to temp, move it to permanent storage
+      if (tempImageKey) {
+        const confirmResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/image/confirm-upload`, {
           method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: formData
+          body: JSON.stringify({ 
+            tempKey: tempImageKey
+            // userId is obtained from auth token by backend
+          })
         });
         
-        if (imageResponse.ok) {
-          const imageData = await imageResponse.json();
-          imageKey = imageData.key;
-          console.log('Image uploaded successfully to S3!');
-          console.log('Stored at:', imageData.key);
-          setImageSaved(true);
+        if (confirmResponse.ok) {
+          const confirmData = await confirmResponse.json();
+          imageKey = confirmData.newKey;
+          console.log('Image moved to permanent storage:', imageKey);
         } else {
-          const errorData = await imageResponse.json();
-          console.error('Failed to upload image:', errorData.message);
-          setSaving(false);
-          return; // Don't save recommendation if image upload fails
+          const errorData = await confirmResponse.json();
+          console.error('Failed to confirm image upload:', errorData.message);
+          // Continue saving even if image confirmation fails
         }
       }
       
@@ -131,6 +204,10 @@ export default function Dashboard() {
       // Set saved state and stop showing loading spinner
       setSaving(false);
       setSaved(true);
+      
+      // Reset image states after successful save
+      setTempImageKey(null);
+      setSelectedImage(null);
     } catch (error) {
       console.error('Save failed:', error);
       setSaving(false); // Re-enable on error
@@ -149,10 +226,11 @@ export default function Dashboard() {
               type="button" 
               className="image-attach-btn"
               onClick={handleImageClick}
+              disabled={uploadingImage}
               aria-label="Attach image"
               title="Attach image"
             >
-              Image
+              {uploadingImage ? 'Uploading...' : 'Image'}
             </button>
             <input 
               type="file"
@@ -171,9 +249,14 @@ export default function Dashboard() {
               name="item"/>
             <button>Add to Bag</button>
           </form>
-          {selectedImage && (
+          {uploadingImage && (
             <small className="image-selected-info">
-              Image selected: {selectedImage.name}
+              🔄 Analyzing image with AI...
+            </small>
+          )}
+          {selectedImage && !uploadingImage && (
+            <small className="image-selected-info">
+              ✅ Image analyzed: {selectedImage.name} - Items automatically added to your list!
             </small>
           )}
         </div>
