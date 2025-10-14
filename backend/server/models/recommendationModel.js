@@ -23,6 +23,10 @@ const recommendationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    imageKey: {
+        type: String,
+        required: false
+    },
     createdAt: {
         type: Date,
         default: Date.now

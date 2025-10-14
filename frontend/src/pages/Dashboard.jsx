@@ -14,10 +14,13 @@ export default function Dashboard() {
   const [title, setTitle] = React.useState("My Trip")
   const [saving, setSaving] = React.useState(false)
   const [loadingRecommendations, setLoadingRecommendations] = React.useState(false)
+  const [selectedImage, setSelectedImage] = React.useState(null)
+  const [imageSaved, setImageSaved] = React.useState(false)
 
   const recommendedEssentials = React.useRef(null)
   const tripDetailsRef = React.useRef(null)
   const itemInputRef = React.useRef(null)
+  const fileInputRef = React.useRef(null)
 
   React.useEffect(() => {
     if (recommendedItems !== "" && recommendedEssentials !== null) {
@@ -35,6 +38,18 @@ export default function Dashboard() {
         itemInputRef.current.focus()
       }
     }, 0)
+  }
+
+  function handleImageClick() {
+    fileInputRef.current?.click()
+  }
+
+  function handleImageSelect(event) {
+    const file = event.target.files?.[0]
+    if (file && file.type.startsWith('image/')) {
+      setSelectedImage(file)
+      setImageSaved(false) // Reset saved state when new image is selected
+    }
   }
 
   async function getRecommendedItems() {
@@ -63,8 +78,35 @@ export default function Dashboard() {
     if (!recommendedItems) return;
     
     setSaving(true);
+    let imageKey = null;
     
     try {
+      // Upload image to S3 first if one is selected
+      if (selectedImage && !imageSaved) {
+        const formData = new FormData();
+        formData.append('image', selectedImage);
+        
+        const imageResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/image/upload-image`, {
+          method: 'POST',
+          credentials: 'include',
+          body: formData
+        });
+        
+        if (imageResponse.ok) {
+          const imageData = await imageResponse.json();
+          imageKey = imageData.key;
+          console.log('Image uploaded successfully to S3!');
+          console.log('Stored at:', imageData.key);
+          setImageSaved(true);
+        } else {
+          const errorData = await imageResponse.json();
+          console.error('Failed to upload image:', errorData.message);
+          setSaving(false);
+          return; // Don't save recommendation if image upload fails
+        }
+      }
+      
+      // Save the recommendation
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/recommendations/save`, {
         method: 'POST',
         headers: {
@@ -75,7 +117,8 @@ export default function Dashboard() {
           title: title,
           packedItems: items,
           tripSummary: tripSummary,
-          aiRecommendations: recommendedItems
+          aiRecommendations: recommendedItems,
+          imageKey: imageKey // Include the S3 key if image was uploaded
         })
       });
 
@@ -97,6 +140,24 @@ export default function Dashboard() {
           <label className="purpose-label">Add items that you have already packed</label>
           <small className="purpose-info">For the best recommendations, add as many items you know you need to pack.</small>
           <form action={addItem} className="add-item-form">
+            <button 
+              type="button" 
+              className="image-attach-btn"
+              onClick={handleImageClick}
+              aria-label="Attach image"
+              title="Attach image"
+            >
+              Image
+            </button>
+            <input 
+              type="file"
+              name="image"
+              ref={fileInputRef}
+              onChange={handleImageSelect}
+              accept="image/*"
+              style={{ display: 'none' }}
+              aria-label="Upload image file"
+            />
             <input 
               ref={itemInputRef}
               aria-label="add packed item" 
@@ -105,6 +166,11 @@ export default function Dashboard() {
               name="item"/>
             <button>Add to Bag</button>
           </form>
+          {selectedImage && (
+            <small className="image-selected-info">
+              Image selected: {selectedImage.name}
+            </small>
+          )}
         </div>
 
         <PackedList listOfItems = {items} />

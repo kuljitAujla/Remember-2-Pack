@@ -31,5 +31,9 @@
     "recommendations"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.908.0",
+    "multer": "^2.0.2"
+  }
 }

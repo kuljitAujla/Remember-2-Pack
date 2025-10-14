@@ -6,6 +6,7 @@ import recommendationRoutes from "./routes/recommendationRoutes.js";
 import connectDB from "./config/mongodb.js";
 import authRoutes from "./routes/authRoutes.js";
 import chatbotRoutes from "./routes/chatbotRoutes.js";
+import imageRoutes from "./routes/imageRoutes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -39,7 +40,8 @@ app.use("/api", recommendRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api", userRoutes);
-app.use("/api/chatbot", chatbotRoutes)
+app.use("/api/chatbot", chatbotRoutes);
+app.use("/api/image", imageRoutes);
 
 app.listen(port, () => {
   console.log(`listening on port ${port}`);

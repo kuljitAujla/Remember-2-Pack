@@ -2,7 +2,7 @@ import recommendationModel from "../models/recommendationModel.js";
 
 export const saveRecommendation = async (req, res) => {
     try {
-        const { title, packedItems, tripSummary, aiRecommendations } = req.body;
+        const { title, packedItems, tripSummary, aiRecommendations, imageKey } = req.body;
         const userId = req.body.userId; // User ID set by authentication middleware
 
         const recommendation = new recommendationModel({
@@ -10,7 +10,8 @@ export const saveRecommendation = async (req, res) => {
             title,
             packedItems,
             tripSummary,
-            aiRecommendations
+            aiRecommendations,
+            imageKey: imageKey || null // Optional: Store S3 image key if provided
         });
 
         const savedRecommendation = await recommendation.save();
