@@ -53,11 +53,15 @@ Remember 2 Pack is a web application that helps travelers create comprehensive p
    HF_API_KEY=hf_key
    ANTHROPIC_API_KEY=anthropic-key
    FRONTEND_URL=frontend-url
+   BUCKET_NAME="your-bucket-name"
+   BUCKET_REGION='your-chosen-aws-region'
+   ACCESS_KEY='your-access-key-from-aws'
+   SECRET_ACCESS_KEY='your-secret-aws-key'
    ```
 
    Frontend `.env`:
    ```env
-   VITE_API_URL=http://localhost:3001 // wherever you are runnning
+   VITE_API_URL=http://localhost:3001 // or wherever you are runnning
    ```
 
 4. Start the development servers
