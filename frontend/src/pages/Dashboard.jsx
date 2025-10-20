@@ -23,7 +23,6 @@ export default function Dashboard() {
   const tripDetailsRef = React.useRef(null)
   const itemInputRef = React.useRef(null)
   const fileInputRef = React.useRef(null)
-  const cleanupTimerRef = React.useRef(null)
 
   React.useEffect(() => {
     if (recommendedItems !== "" && recommendedEssentials !== null) {
@@ -31,14 +30,6 @@ export default function Dashboard() {
     }
   }, [recommendedItems])
 
-  // Cleanup timer on unmount
-  React.useEffect(() => {
-    return () => {
-      if (cleanupTimerRef.current) {
-        clearTimeout(cleanupTimerRef.current)
-      }
-    }
-  }, [])
 
   function addItem(formData) {
     const newItem = formData.get("item")
@@ -91,27 +82,6 @@ export default function Dashboard() {
         setItems(prevItems => [...prevItems, ...itemNames])
       }
 
-      // Start 20-minute cleanup timer
-      if (cleanupTimerRef.current) {
-        clearTimeout(cleanupTimerRef.current)
-      }
-      
-      cleanupTimerRef.current = setTimeout(async () => {
-        // Delete temp image after 20 minutes if not saved
-        try {
-          await fetch(`${import.meta.env.VITE_API_URL}/api/image/cancel-upload`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ tempKey: data.key })
-          })
-          setTempImageKey(null)
-          setSelectedImage(null)
-          console.log('Temp image deleted after 20 minutes')
-        } catch (error) {
-          console.error('Failed to delete temp image:', error)
-        }
-      }, 20 * 60 * 1000) // 20 minutes
 
     } catch (error) {
       console.error('Failed to upload image:', error)
@@ -152,11 +122,6 @@ export default function Dashboard() {
     let imageKey = null;
     
     try {
-      // Clear the cleanup timer since we're saving
-      if (cleanupTimerRef.current) {
-        clearTimeout(cleanupTimerRef.current)
-        cleanupTimerRef.current = null
-      }
 
       // If image was uploaded to temp, move it to permanent storage
       if (tempImageKey) {
