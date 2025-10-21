@@ -71,7 +71,6 @@ export const recommendController = async (req, res) => {
       recommendations 
     });
   } catch (error) {
-    console.error("Error generating recommendations:", error);
     return res.status(500).json({ 
       success: false, 
       error: error.message 

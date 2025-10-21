@@ -54,9 +54,6 @@ Important Instructions:
 Keep your response to one to two sentences maximum.
 `;
 
-console.log(chatbotHistory)
-console.log(aiRecommendations)
-
   try {
     const question = await callAI(CHATBOT_PROMPT, { 
       maxTokens: AI_CONFIG.MAX_TOKENS.STANDARD 
@@ -64,7 +61,6 @@ console.log(aiRecommendations)
 
     return res.json({ success: true, question });
   } catch (error) {
-    console.error("Error generating chatbot question:", error);
     return res.status(500).json({ 
       success: false, 
       error: error.message 
@@ -158,7 +154,6 @@ export const refinedRecommendations = async (req, res) => {
       refinedRecommendations: refinedMarkdown,
     });
   } catch (err) {
-    console.error("Error refining recommendations:", err);
     return res.status(500).json({
       success: false,
       error: err.message || "Failed to refine recommendations",

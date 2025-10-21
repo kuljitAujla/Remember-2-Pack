@@ -34,7 +34,6 @@ export const saveRecommendation = async (req, res) => {
             recommendation: savedRecommendation
         });
     } catch (error) {
-        console.error("Error saving recommendation:", error);
         res.status(500).json({
             success: false,
             message: "Failed to save recommendation",
@@ -57,7 +56,6 @@ export const getUserRecommendations = async (req, res) => {
             recommendations
         });
     } catch (error) {
-        console.error("Error fetching recommendations:", error);
         res.status(500).json({
             success: false,
             message: "Failed to fetch recommendations",
@@ -88,7 +86,6 @@ export const getRecommendationById = async (req, res) => {
             recommendation
         });
     } catch (error) {
-        console.error("Error fetching recommendation:", error);
         res.status(500).json({
             success: false,
             message: "Failed to fetch recommendation",
@@ -119,7 +116,6 @@ export const deleteRecommendation = async (req, res) => {
             message: "Recommendation deleted successfully"
         });
     } catch (error) {
-        console.error("Error deleting recommendation:", error);
         res.status(500).json({
             success: false,
             message: "Failed to delete recommendation",
@@ -169,7 +165,6 @@ export const imageURL = async (req, res) => {
             imageUrl: signedUrl
         });
     } catch (error) {
-        console.error("Error providing image url:", error);
         res.status(500).json({
             success: false,
             message: "Failed to provide image url",

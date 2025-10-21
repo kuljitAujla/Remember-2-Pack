@@ -102,12 +102,6 @@ export const uploadImage = async (req, res) => {
       detectedItems,
     });
   } catch (error) {
-    console.error("Upload/Detection Error:", error);
-    console.error("Error details:", {
-      message: error.message,
-      code: error.code,
-      stack: error.stack
-    });
     res.status(500).json({
       success: false,
       message: "Failed to upload or analyze image",
@@ -159,7 +153,6 @@ export const confirmUpload = async (req, res) => {
 
     res.json({ success: true, newKey });
   } catch (error) {
-    console.error("Confirm Upload Error:", error);
     res
       .status(500)
       .json({ success: false, message: "Failed to confirm upload", error });
