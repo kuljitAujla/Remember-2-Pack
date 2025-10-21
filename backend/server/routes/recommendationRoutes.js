@@ -1,5 +1,5 @@
 import express from "express";
-import { saveRecommendation, getUserRecommendations, getRecommendationById, deleteRecommendation } from "../controllers/recommendationController.js";
+import { saveRecommendation, getUserRecommendations, getRecommendationById, deleteRecommendation, imageURL } from "../controllers/recommendationController.js";
 import userAuth from "../middleware/userAuth.js";
 
 const router = express.Router();
@@ -18,5 +18,8 @@ router.get("/:id", getRecommendationById);
 
 // Delete a recommendation
 router.delete("/:id", deleteRecommendation);
+
+// Get the image URL by key
+router.get("/image/:key", imageURL)
 
 export default router;

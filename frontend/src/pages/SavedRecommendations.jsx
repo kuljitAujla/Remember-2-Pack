@@ -8,6 +8,7 @@ export default function SavedRecommendations() {
   const [selectedRecommendation, setSelectedRecommendation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     fetchRecommendations();
@@ -33,6 +34,23 @@ export default function SavedRecommendations() {
     }
   };
 
+  const fetchImageUrl = async (imageKey) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/recommendations/image/${encodeURIComponent(imageKey)}`,
+        { credentials: 'include' }
+      );
+      
+      if (response.ok) {
+        const data = await response.json();
+        return data.imageUrl;
+      }
+    } catch (error) {
+      console.error('Failed to fetch image URL:', error);
+    }
+    return null;
+  };
+
   const fetchFullRecommendation = async (id) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/recommendations/${id}`, {
@@ -45,6 +63,14 @@ export default function SavedRecommendations() {
       
       const data = await response.json();
       setSelectedRecommendation(data.recommendation);
+
+      // Fetch image URL if imageKey exists
+      if (data.recommendation.imageKey) {
+        const fetchedImageUrl = await fetchImageUrl(data.recommendation.imageKey);
+        setImageUrl(fetchedImageUrl);
+      } else {
+        setImageUrl(null);
+      }
     } catch (err) {
       setError(err.message);
     }
@@ -145,6 +171,24 @@ export default function SavedRecommendations() {
               <h3>Trip Details:</h3>
               <p>{selectedRecommendation.tripSummary}</p>
             </div>
+            
+            {/* Display uploaded image if available */}
+            {selectedRecommendation.imageKey && imageUrl && (
+              <div className="uploaded-image">
+                <h3>Uploaded Image:</h3>
+                <img 
+                  src={imageUrl} 
+                  alt="Uploaded image for object detection"
+                  style={{ 
+                    maxWidth: '300px', 
+                    maxHeight: '300px', 
+                    objectFit: 'cover',
+                    borderRadius: '8px',
+                    border: '1px solid #ddd'
+                  }}
+                />
+              </div>
+            )}
             
             <div className="packed-items">
               <h3>Items You Packed:</h3>

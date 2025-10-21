@@ -129,11 +129,11 @@
   margin: 0;
 }
 
-.trip-info, .packed-items, .ai-recommendations {
+.trip-info, .packed-items, .ai-recommendations, .uploaded-image {
   margin-bottom: 25px;
 }
 
-.trip-info h3, .packed-items h3, .ai-recommendations h3 {
+.trip-info h3, .packed-items h3, .ai-recommendations h3, .uploaded-image h3 {
   color: #EAEAEA;
   margin: 0 0 10px 0;
   font-size: 18px;
@@ -142,6 +142,22 @@
 .trip-info p {
   color: #BBB;
   line-height: 1.5;
+}
+
+.uploaded-image {
+  background-color: #2A2A2A;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.uploaded-image img {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.uploaded-image img:hover {
+  transform: scale(1.02);
 }
 
 .packed-items ul {

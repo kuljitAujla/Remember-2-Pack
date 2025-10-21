@@ -13,6 +13,7 @@
     "@anthropic-ai/sdk": "^0.57.0",
     "@aws-sdk/client-rekognition": "^3.908.0",
     "@aws-sdk/client-s3": "^3.908.0",
+    "@aws-sdk/s3-request-presigner": "^3.913.0",
     "@huggingface/inference": "^4.7.1",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
@@ -27,8 +28,12 @@
   "devDependencies": {
     "nodemon": "^3.1.10"
   },
-  "keywords": ["node", "express", "mongodb", "backend"],
+  "keywords": [
+    "node",
+    "express",
+    "mongodb",
+    "backend"
+  ],
   "author": "",
   "license": "ISC"
 }
-

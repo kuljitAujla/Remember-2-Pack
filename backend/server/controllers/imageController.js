@@ -117,7 +117,7 @@ export const uploadImage = async (req, res) => {
   }
 };
 
-// =============== Confirm Upload (move to permanent folder) ===============
+// Confirm Upload (move to permanent folder)
 export const confirmUpload = async (req, res) => {
   try {
     const { tempKey } = req.body;

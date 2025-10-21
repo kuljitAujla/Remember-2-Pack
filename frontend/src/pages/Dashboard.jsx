@@ -123,7 +123,7 @@ export default function Dashboard() {
     
     try {
 
-      // If image was uploaded to temp, move it to permanent storage
+      // If image was uploaded to temp, moves it to permanent storage
       if (tempImageKey) {
         const confirmResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/image/confirm-upload`, {
           method: 'POST',
@@ -138,11 +138,8 @@ export default function Dashboard() {
         if (confirmResponse.ok) {
           const confirmData = await confirmResponse.json();
           imageKey = confirmData.newKey;
-          console.log('Image moved to permanent storage:', imageKey);
         } else {
           const errorData = await confirmResponse.json();
-          console.error('Failed to confirm image upload:', errorData.message);
-          // Continue saving even if image confirmation fails
         }
       }
       
