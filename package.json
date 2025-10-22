@@ -31,7 +31,7 @@
     "recommendations"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-rekognition": "^3.908.0",
     "@aws-sdk/client-s3": "^3.908.0",
