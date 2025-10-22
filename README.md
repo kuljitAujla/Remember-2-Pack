@@ -11,9 +11,59 @@ Remember 2 Pack is a web application that helps travelers create comprehensive p
 - **AI-Powered Recommendations** - Uses Claude and Hugging Face to generate personalized packing suggestions
 - **Organized Categories** - Items sorted into clear categories like toiletries, clothing, electronics, and essentials
 - **Smart Suggestions** - Reminds you of commonly forgotten items like chargers, medications, and travel documents
-- **Save & Organize** - Save recommendations for future trips and organize by destination
+- **Save & Organize** - Save recommendations for future trips
 - **User Authentication** - Secure user accounts with email verification
 - **Responsive Design** - Works on desktop and mobile devices
+
+## How It Works
+
+1. Add Items - Start by adding items you already know you need to pack
+2. Describe Your Trip - Tell us about your destination, activities, weather, and duration
+3. Get AI Recommendations - Receive categorized suggestions based on your input
+
+## Tech Stack
+
+### Frontend
+- **React 19** — Modern UI library for building interactive components  
+- **Vite** — Fast development and build tool  
+- **React Markdown** — Renders AI-generated responses in formatted markdown  
+
+### Backend
+- **Node.js** — JavaScript runtime environment  
+- **Express.js** — Web framework for handling routes and APIs  
+- **MongoDB** — NoSQL database managed with Mongoose ODM  
+- **JWT** — JSON Web Tokens for secure authentication  
+- **Bcrypt.js** — Password hashing for user security  
+
+### Integrations & Services
+- **Resend (SMTP)** — Transactional email delivery (used for verification & password reset)  
+- **Dotenv** — Environment variable management  
+- **CORS** — Cross-origin resource configuration  
+- **AWS S3 + Rekognition** — Asset storage and image analysis for item detection  
+- **Anthropic + Hugging Face** — AI providers with HF primary, Claude fallback
+
+### Hosting & Deployment
+- **Docker** — Containers for both frontend and backend
+- **Docker Compose** — Local dev and production-style orchestration
+- **Render** — Host both frontend and backend
+- **GoDaddy** — Domain registration and forwarding
+
+### Development Tools
+
+- **VS Code** — Main code editor for full-stack development  
+- **Postman** — API testing and debugging  
+- **MongoDB Atlas** — GUI for visualizing and managing database data  
+- **Render Logs** — Monitoring backend requests and deployments  
+- **Cookie Editor (Chrome Extension)** — Testing authentication cookies and session persistence  
+- **ChatGPT** — Debugging assistance and UI refinement
+- **Git & GitHub** — Version control
+
+
+
+### AI Integration
+- Anthropic Claude - Fallback AI for recommendations
+- Hugging Face - Primary AI service
+
 
 ## Getting Started
 
@@ -61,7 +111,7 @@ Remember 2 Pack is a web application that helps travelers create comprehensive p
 
    Frontend `.env`:
    ```env
-   VITE_API_URL=http://localhost:3001 // or wherever you are runnning
+   VITE_API_URL=http://localhost:3001
    ```
 
 4. Start the development servers
@@ -71,192 +121,86 @@ Remember 2 Pack is a web application that helps travelers create comprehensive p
 
    This will start both frontend (http://localhost:5173) and backend (http://localhost:3001)
 
-## Project Structure
+## Running with Docker
+
+You can run both services with Docker Compose. The frontend will be available on http://localhost:3000 and the backend on http://localhost:3001.
+
+- Development-like compose:
+  ```bash
+  docker compose up --build
+  ```
+
+- Production-like compose:
+  ```bash
+  docker compose -f docker-compose.prod.yml up --build -d
+  ```
+
+Notes:
+- The dev compose mounts `./backend` into the backend container for live reload and passes `VITE_API_URL` build arg to the frontend image.
+- Ensure `backend/.env` exists before starting compose (Compose uses `env_file: ./backend/.env`).
+
+## Main Project Structure
 
 ```
 remember-2-pack/
 ├── frontend/                    # React application (Vite)
 │   ├── src/
 │   │   ├── components/         # Reusable React components
-│   │   ├── pages/             # Page components
-│   │   ├── styles/            # CSS stylesheets
-│   │   ├── ai.js              # AI integration helper
-│   │   └── main.jsx           # Application entry point
-│   ├── public/                # Static assets
+│   │   ├── pages/              # Page components
+│   │   ├── styles/             # CSS stylesheets
+│   │   ├── ai.js               # AI integration helper
+│   │   └── main.jsx            # Application entry point
+│   ├── public/                 # Static assets
 │   └── package.json
-├── backend/                    # Node.js/Express server
+├── backend/                     # Node.js/Express server
 │   ├── server/
-│   │   ├── config/            # Database and email configuration
-│   │   ├── controllers/       # Request handlers
-│   │   ├── middleware/        # Custom middleware
-│   │   ├── models/            # Database models
-│   │   ├── routes/            # API routes
-│   │   └── index.js           # Server entry point
+│   │   ├── config/             # Database and email configuration
+│   │   ├── controllers/        # Request handlers
+│   │   ├── middleware/         # Custom middleware
+│   │   ├── models/             # Database models
+│   │   ├── routes/             # API routes
+│   │   └── index.js            # Server entry point
 │   └── package.json
-├── package.json               # Root package.json for workspace management
+├── docker-compose.yml           # Local dev orchestration
+├── docker-compose.prod.yml      # Production-like orchestration
+├── package.json                 # Root package.json for workspace management
 └── README.md
 ```
 
-## Available Scripts
-
-### Root Level Scripts
-
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start both frontend and backend in development mode |
-| `npm run dev:frontend` | Start only the frontend development server |
-| `npm run dev:backend` | Start only the backend development server |
-| `npm run build` | Build the frontend for production |
-| `npm run install:all` | Install dependencies for all projects |
-| `npm run lint` | Run ESLint on the frontend |
-| `npm start` | Start the production backend server |
-| `npm run preview` | Preview the built frontend |
-
-### Frontend Scripts
-
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start Vite development server |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Run ESLint |
-
-### Backend Scripts
-
-| Script | Description |
-|--------|-------------|
-| `npm run dev` | Start with nodemon (development) |
-| `npm start` | Start production server |
-
-## How It Works
-
-1. Add Items - Start by adding items you already know you need to pack
-2. Describe Your Trip - Tell us about your destination, activities, weather, and duration
-3. Get AI Recommendations - Receive categorized suggestions based on your input
-
-## Tech Stack
-
-### Frontend
-- **React 19** — Modern UI library for building interactive components  
-- **Vite** — Fast development and build tool  
-- **React Router** — Client-side routing for seamless navigation  
-- **React Markdown** — Renders AI-generated responses in formatted markdown  
-
-### Backend
-- **Node.js** — JavaScript runtime environment  
-- **Express.js** — Web framework for handling routes and APIs  
-- **MongoDB** — NoSQL database managed with Mongoose ODM  
-- **JWT** — JSON Web Tokens for secure authentication  
-- **Bcrypt.js** — Password hashing for user security  
-
-### Integrations & Services
-- **Resend (SMTP)** — Transactional email delivery (used for verification & password reset)  
-- **Dotenv** — Environment variable management  
-- **CORS** — Cross-origin resource configuration  
-
-### Hosting & Deployment
-- **Render** — Hosting for both frontend and backend  
-- **GoDaddy** — Domain registration and forwarding  
-
-### Development Tools
-
-- **VS Code** — Main code editor for full-stack development  
-- **Postman** — API testing and debugging  
-- **MongoDB Atlas** — GUI for visualizing and managing database data  
-- **Render Logs** — Monitoring backend requests and deployments  
-- **Cookie Editor (Chrome Extension)** — Testing authentication cookies and session persistence  
-- **ChatGPT** — Debugging assistance and UI refinement
-- **Git & GitHub** — Version control
-
-
-
-### AI Integration
-- Anthropic Claude - Primary AI for recommendations
-- Hugging Face - Fallback AI service
-
 ## API Endpoints
 
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-- `POST /api/auth/verify-email` - Email verification
-- `POST /api/auth/forgot-password` - Password reset
+Base URL: `/api`
 
-### Recommendations
-- `POST /api/recommend` - Get AI recommendations
-- `POST /api/recommendations/save` - Save recommendations
-- `GET /api/recommendations` - Get saved recommendations
-- `DELETE /api/recommendations/:id` - Delete recommendation
+### Auth (`/api/auth`)
+- `POST /register` — Register user
+- `POST /login` — Login user
+- `POST /logout` — Logout user
+- `POST /send-verify-otp` — Send verification OTP (requires auth cookie)
+- `POST /verify-account` — Verify account (requires auth cookie)
+- `POST /is-auth` — Check auth status (requires auth cookie)
+- `POST /send-reset-otp` — Send password reset OTP
+- `POST /reset-password` — Reset password
 
-### User Management
-- `GET /api/user/profile` - Get user profile
-- `PUT /api/user/profile` - Update user profile
+### Recommendations store (`/api/recommendations`)
+- `POST /save` — Save recommendation (requires auth)
+- `GET /` — Get user recommendations (requires auth)
+- `GET /:id` — Get recommendation by id (requires auth)
+- `DELETE /:id` — Delete recommendation (requires auth)
+- `GET /image/:key` — Get image URL by key (requires auth)
 
-## Deployment
+### Recommendation generation (`/api`)
+- `POST /recommend` — Generate recommendations (requires auth)
 
-### Frontend Deployment
+### Chatbot (`/api/chatbot`)
+- `POST /generate-question` — Generate clarifying questions
+- `POST /refined-recommendation` — Generate refined recommendations
 
-1. Build the frontend:
-   ```bash
-   npm run build
-   ```
+### Images (`/api/image`)
+- `POST /upload-image` — Upload an image for processing (requires auth)
+- `POST /confirm-upload` — Confirm image upload and process (requires auth)
 
-2. Deploy the `frontend/dist` folder to your hosting service
-
-3. Set environment variables:
-   - `VITE_API_URL` - Your backend API URL
-
-### Backend Deployment
-
-1. Set up your MongoDB database (MongoDB Atlas recommended)
-
-2. Configure environment variables:
-   ```env
-   MONGODB_URI='your_mongodb_connection_string'
-   JWT_SECRET='your_jwt_secret_key'
-   NODE_ENV='development'
-   SMTP_USER='based on your SMTP provider'
-   SMTP_PASS='based on your SMTP provider'
-   SENDER_EMAIL_OTP_VERIFY="otp-verification@your-domain.com"
-   SENDER_EMAIL_OTP_RESET="otp-reset@your-domain.com"
-   SENDER_EMAIL_WELCOME="welcome@your-domain.com"
-   HF_API_KEY=hf_key
-   ANTHROPIC_API_KEY=anthropic-key
-   FRONTEND_URL=frontend-url
-   BUCKET_NAME="your-bucket-name"
-   BUCKET_REGION='your-chosen-aws-region'
-   ACCESS_KEY='your-access-key-from-aws'
-   SECRET_ACCESS_KEY='your-secret-aws-key'
-   ```
-
-3. Deploy your backend code
-
-## Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. Commit your changes
-   ```bash
-   git commit -m 'Add some amazing feature'
-   ```
-4. Push to the branch
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-5. Open a Pull Request
-
-### Development Guidelines
-
-- Follow the existing code style
-- Add tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting
+### Health
+- `GET /health` — Service health check
 
 ## License
 
