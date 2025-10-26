@@ -1,7 +1,7 @@
 /* Dashboard Styles */
 .dashboard-container {
   min-height: 100vh;
-  background-color: #0D1117;
+  background-color: #0f0f10;
   color: #EAEAEA;
 }
 
@@ -114,17 +114,29 @@
   align-items: flex-start;
 }
 
+/* Enhanced Recommendations Content */
 .recommendations-content {
-  flex: 2; /* Give recommendations more space */
-  min-width: 300px; /* Allows flex item to shrink below its content size */
+  flex: 3; /* Give recommendations more space */
+  min-width: 400px;
+  background: linear-gradient(135deg, #1a1f2e 0%, #2a3441 100%);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
 }
 
 .recommendations-content h2 {
   color: #EAEAEA;
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 25px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 32px;
   text-align: left;
+  background: linear-gradient(135deg, #EAEAEA 0%, #B0B0B0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border-bottom: 2px solid #3a4a5c;
+  padding-bottom: 16px;
 }
 
 .recommendations-content h1,
@@ -135,10 +147,11 @@
 .recommendations-content h6 {
   color: #EAEAEA;
   text-align: left;
-  margin-top: 25px;
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-  font-weight: 500;
+  margin-top: 32px;
+  margin-bottom: 16px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  position: relative;
 }
 
 .recommendations-content h1:first-of-type,
@@ -150,24 +163,49 @@
   margin-top: 0;
 }
 
+/* Enhanced List Styling */
 .recommendations-content ul,
 .recommendations-content ol {
   text-align: left;
-  margin-bottom: 15px;
-  padding-left: 20px;
-  list-style-type: disc;
+  margin-bottom: 24px;
+  padding-left: 0;
+  list-style-type: none;
 }
 
 .recommendations-content li {
-  color: #CCCCCC;
-  margin-bottom: 5px;
-  line-height: 1.4;
+  background: linear-gradient(135deg, #2a3441 0%, #3a4a5c 100%);
+  color: #EAEAEA;
+  margin-bottom: 12px;
+  line-height: 1.6;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid #3a4a5c;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  font-weight: 500;
+}
+
+.recommendations-content li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border-color: #5170ff;
+}
+
+.recommendations-content li::before {
+  content: "✓";
+  color: #5170ff;
+  font-weight: bold;
+  margin-right: 12px;
+  font-size: 1.1rem;
 }
 
 .recommendations-content p {
   text-align: left;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   color: #CCCCCC;
+  line-height: 1.6;
+  font-size: 1.05rem;
 }
 
 /* Chatbot Section in Dashboard */
