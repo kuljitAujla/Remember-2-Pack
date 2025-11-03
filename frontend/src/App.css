@@ -673,6 +673,7 @@
   .add-item-form {
     max-width: 100%;
     margin: 20px 16px;
+    margin-bottom: 50px;
   }
 
   .purpose-container {

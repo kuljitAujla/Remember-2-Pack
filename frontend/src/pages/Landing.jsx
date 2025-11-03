@@ -35,7 +35,7 @@ export default function Landing() {
           <div className="hero-stats">
             <div className="stat">
               <span className="stat-number">100%</span>
-              <span className="stat-label">Sensative Data Encrypted</span>
+              <span className="stat-label">Sensitive Data Encrypted</span>
             </div>
             <div className="stat">
               <span className="stat-number">5★</span>

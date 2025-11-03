@@ -166,13 +166,14 @@
 
 .password-toggle-icon {
   position: absolute;
-  right: 12px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
   color: #666;
   font-size: 1.2rem;
   transition: color 0.2s ease;
+  margin-left: 10px;
 }
 
 .password-toggle-icon:hover {

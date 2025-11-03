@@ -43,6 +43,19 @@ app.use("/api", userRoutes);
 app.use("/api/chatbot", chatbotRoutes);
 app.use("/api/image", imageRoutes);
 
+// For unknown routes 
+const frontendPath = path.join(__dirname, "../frontend/dist"); 
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(frontendPath));
+
+  // Catch-all route: send index.html for unknown paths which "activates" react routes
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(frontendPath, "index.html"));
+  });
+}
+
+
 app.listen(port, () => {
   console.log(`listening on port ${port}`);
 });
