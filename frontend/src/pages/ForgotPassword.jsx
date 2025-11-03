@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/auth.css';
 
@@ -14,6 +14,23 @@ export default function ForgotPassword() {
   const [message, setMessage] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0); // 1.5 minutes in seconds
+
+  // Countdown timer for resend cooldown
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setInterval(() => {
+        setResendCooldown((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [resendCooldown]);
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -24,6 +41,11 @@ export default function ForgotPassword() {
 
   const handleSendOTP = async (e) => {
     e.preventDefault();
+    
+    // Prevent resend if cooldown is active (only when resending from step 2)
+    if (step === 2 && resendCooldown > 0) {
+      return;
+    }
     
     // Inline validation
     if (!formData.email.trim()) {
@@ -54,6 +76,7 @@ export default function ForgotPassword() {
       if (data.success) {
         setMessage('OTP sent to your email! Check your inbox and spam folder.');
         setStep(2);
+        setResendCooldown(90); // Start 1.5 minute cooldown
       } else {
         setMessage(data.message || 'Failed to send OTP. Please try again.');
       }
@@ -253,17 +276,19 @@ export default function ForgotPassword() {
               Didn't receive the OTP? <button 
                 type="button" 
                 onClick={() => handleSendOTP({ preventDefault: () => {} })}
+                disabled={resendCooldown > 0}
                 style={{ 
                   background: 'none', 
                   border: 'none', 
-                  color: '#5170ff', 
+                  color: resendCooldown > 0 ? '#999' : '#5170ff', 
                   textDecoration: 'none', 
                   fontWeight: '600', 
-                  cursor: 'pointer',
-                  fontSize: 'inherit'
+                  cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer',
+                  fontSize: 'inherit',
+                  opacity: resendCooldown > 0 ? 0.6 : 1
                 }}
               >
-                Resend OTP
+                {resendCooldown > 0 ? `Resend OTP (${formatTime(resendCooldown)})` : 'Resend OTP'}
               </button>
             </>
           )}

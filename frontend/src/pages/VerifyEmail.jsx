@@ -10,7 +10,18 @@ export default function VerifyEmail() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [resendCooldown, setResendCooldown] = useState(90); // 1.5 minutes in seconds
   const navigate = useNavigate();
+
+  // Countdown timer for resend cooldown
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setInterval(() => {
+        setResendCooldown((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [resendCooldown]);
 
   useEffect(() => {
     const sendOtp = async () => {
@@ -19,6 +30,7 @@ export default function VerifyEmail() {
           method: 'POST',
           credentials: 'include'
         });
+        setResendCooldown(90); // Start cooldown after initial OTP sent
       } catch (error) {
         console.log('error sending verification OTP: ', error)
       }
@@ -79,6 +91,8 @@ export default function VerifyEmail() {
 
   const handleResendOTP = async (e) => {
     e.preventDefault();
+    if (resendCooldown > 0) return; // Prevent resend if cooldown is active
+    
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/send-verify-otp`, {
         method: 'POST',
@@ -87,6 +101,7 @@ export default function VerifyEmail() {
       const data = await response.json();
       if (data.success) {
         setMessage('OTP sent to email successfully');
+        setResendCooldown(90); // Start 1.5 minute cooldown
       } else {
         setMessage(data.message || 'Failed to send OTP. Please try again.');
       }
@@ -95,6 +110,12 @@ export default function VerifyEmail() {
       setMessage('Network error. Please check your connection and try again.');
     }
   }
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   return (
     <div className="auth-page">
@@ -142,9 +163,18 @@ export default function VerifyEmail() {
               <button 
                 onClick={handleResendOTP}
                 className="auth-button secondary"
-                style={{ padding: '8px 16px', fontSize: '14px', minWidth: 'auto', maxWidth: '50%', marginTop: '0px' }}
+                disabled={resendCooldown > 0}
+                style={{ 
+                  padding: '8px 16px', 
+                  fontSize: '14px', 
+                  minWidth: 'auto', 
+                  maxWidth: '50%', 
+                  marginTop: '0px',
+                  opacity: resendCooldown > 0 ? 0.6 : 1,
+                  cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer'
+                }}
               >
-                Resend OTP
+                {resendCooldown > 0 ? `Resend OTP (${formatTime(resendCooldown)})` : 'Resend OTP'}
               </button>
             </div>
           </div>
