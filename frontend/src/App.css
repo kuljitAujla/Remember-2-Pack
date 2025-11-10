@@ -680,6 +680,7 @@
     padding: 24px 20px;
     margin: 20px 16px;
     max-width: calc(100% - 32px);
+    margin-bottom: 50px;
   }
 
   .purpose-text {
