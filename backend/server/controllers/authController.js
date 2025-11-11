@@ -45,48 +45,7 @@ export const register = async (req, res) => {
             domain: process.env.NODE_ENV === 'production' ? '.remember2pack.com' : undefined
         });
 
-        // sending email
-        const mailOptions = {
-            from: process.env.SENDER_EMAIL_WELCOME,
-            to: email,
-            subject: 'Welcome to Remember-2-Pack',
-            html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
-            <div style="background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h1 style="color: #2c3e50; margin: 0; font-size: 28px;">🎒 Remember-2-Pack</h1>
-                    <p style="color: #7f8c8d; margin: 10px 0 0 0; font-size: 16px;">Never forget your essentials again!</p>
-                </div>
-                
-                <div style="text-align: center; margin: 30px 0;">
-                    <h2 style="color: #27ae60; margin: 0 0 20px 0; font-size: 24px;">Welcome aboard! 🎉</h2>
-                    <p style="color: #34495e; font-size: 16px; line-height: 1.6; margin: 0;">
-                        Your account has been successfully created with email: <strong>${email}</strong>
-                    </p>
-                </div>
-                
-                <div style="background-color: #ecf0f1; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
-                    <p style="color: #2c3e50; margin: 0; font-size: 14px;">
-                        <strong>Next steps:</strong><br>
-                        1. Check your email for verification code<br>
-                        2. Verify your account<br>
-                        3. Start packing smart! 🚀
-                    </p>
-                </div>
-                
-                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ecf0f1;">
-                    <p style="color: #95a5a6; font-size: 12px; margin: 0;">
-                        Thank you for choosing Remember-2-Pack!<br>
-                    </p>
-                </div>
-            </div>
-        </div>
-    `
-        }
-
-        await transporter.sendMail(mailOptions);
-
-        return res.json({success: true});
+        return res.json({success: true, message: 'Account created successfully. Please verify your email.'});
 
     } catch (error) {
         return res.json({success: false, message: error.message});
@@ -243,7 +202,48 @@ export const verifyEmail = async (req, res) => {
         user.verifyOtpExpiry = 0;
     
         await user.save();
-        return res.json({ success: true, message: "Email verified sucessfully!"})
+
+        const mailOptions = {
+            from: process.env.SENDER_EMAIL_WELCOME,
+            to: user.email,
+            subject: 'Welcome to Remember-2-Pack',
+            html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+            <div style="background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h1 style="color: #2c3e50; margin: 0; font-size: 28px;">🎒 Remember-2-Pack</h1>
+                    <p style="color: #7f8c8d; margin: 10px 0 0 0; font-size: 16px;">Never forget your essentials again!</p>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <h2 style="color: #27ae60; margin: 0 0 20px 0; font-size: 24px;">Welcome aboard! 🎉</h2>
+                    <p style="color: #34495e; font-size: 16px; line-height: 1.6; margin: 0;">
+                        Your account has been successfully created with email: <strong>${user.email}</strong>
+                    </p>
+                </div>
+                
+                <div style="background-color: #ecf0f1; border-radius: 8px; padding: 20px; margin: 20px 0; text-align: center;">
+                    <p style="color: #2c3e50; margin: 0; font-size: 14px;">
+                        <strong>Next steps:</strong><br>
+                        1. Check your email for verification code<br>
+                        2. Verify your account<br>
+                        3. Start packing smart! 🚀
+                    </p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ecf0f1;">
+                    <p style="color: #95a5a6; font-size: 12px; margin: 0;">
+                        Thank you for choosing Remember-2-Pack!<br>
+                    </p>
+                </div>
+            </div>
+        </div>
+    `
+        }
+
+        await transporter.sendMail(mailOptions);
+
+        return res.json({ success: true, message: "Email verified successfully!"})
 
     } catch (error) {
         return res.json({ success: false, message: error.message})

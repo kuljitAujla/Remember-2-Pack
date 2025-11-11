@@ -140,6 +140,7 @@ export default function Dashboard() {
           imageKey = confirmData.newKey;
         } else {
           const errorData = await confirmResponse.json();
+          console.log(errorData)
         }
       }
       

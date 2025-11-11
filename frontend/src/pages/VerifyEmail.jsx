@@ -10,7 +10,7 @@ export default function VerifyEmail() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [resendCooldown, setResendCooldown] = useState(90); // 1.5 minutes in seconds
+  const [resendCooldown, setResendCooldown] = useState(0);
   const navigate = useNavigate();
 
   // Countdown timer for resend cooldown
@@ -24,20 +24,38 @@ export default function VerifyEmail() {
   }, [resendCooldown]);
 
   useEffect(() => {
-    const sendOtp = async () => {
-      try {
-        await fetch(`${import.meta.env.VITE_API_URL}/api/auth/send-verify-otp`, {
-          method: 'POST',
-          credentials: 'include'
-        });
-        setResendCooldown(90); // Start cooldown after initial OTP sent
-      } catch (error) {
-        console.log('error sending verification OTP: ', error)
+    const requestInitialOtp = async () => {
+      const hasRequested = sessionStorage.getItem('verifyOtpRequested');
+      if (!hasRequested) {
+        await requestOtp(true);
       }
     };
-    
-    sendOtp();
+
+    requestInitialOtp();
   }, []);
+
+  const requestOtp = async (isInitial = false) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/send-verify-otp`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      const data = await response.json();
+      if (data.success) {
+        sessionStorage.setItem('verifyOtpRequested', 'true');
+        setResendCooldown(90);
+        if (!isInitial) {
+          setMessage('OTP sent to email successfully');
+        }
+        return true;
+      }
+      setMessage(data.message || 'Failed to send OTP. Please try again.');
+    } catch (error) {
+      console.log('error sending verification OTP: ', error);
+      setMessage('Network error. Please check your connection and try again.');
+    }
+    return false;
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -72,7 +90,7 @@ export default function VerifyEmail() {
       const data = await response.json();
 
       if (data.success) {
-
+        sessionStorage.removeItem('verifyOtpRequested');
         setMessage('Account verified successfully! Redirecting to dashboard...');
         setTimeout(() => {
           navigate('/app');
@@ -91,24 +109,8 @@ export default function VerifyEmail() {
 
   const handleResendOTP = async (e) => {
     e.preventDefault();
-    if (resendCooldown > 0) return; // Prevent resend if cooldown is active
-    
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/send-verify-otp`, {
-        method: 'POST',
-        credentials: 'include'
-      });
-      const data = await response.json();
-      if (data.success) {
-        setMessage('OTP sent to email successfully');
-        setResendCooldown(90); // Start 1.5 minute cooldown
-      } else {
-        setMessage(data.message || 'Failed to send OTP. Please try again.');
-      }
-    } catch (error) {
-      console.log('error sending verification OTP: ', error);
-      setMessage('Network error. Please check your connection and try again.');
-    }
+    if (resendCooldown > 0) return;
+    await requestOtp();
   }
 
   const formatTime = (seconds) => {

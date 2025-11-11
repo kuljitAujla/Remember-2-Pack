@@ -110,7 +110,7 @@ export default function Signup() {
       const data = await response.json();
 
       if (data.success) {
-
+        sessionStorage.removeItem('verifyOtpRequested');
         setMessage('Account created successfully! Redirecting to email verification...');
         setTimeout(() => {
           navigate('/verify-email');
