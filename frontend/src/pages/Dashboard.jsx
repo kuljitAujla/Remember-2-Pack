@@ -26,7 +26,7 @@ export default function Dashboard() {
 
   React.useEffect(() => {
     if (recommendedItems !== "" && recommendedEssentials !== null) {
-      recommendedEssentials.current.scrollIntoView({behavior: "smooth"})
+      recommendedEssentials.current.scrollIntoView({ behavior: "smooth" })
     }
   }, [recommendedItems])
 
@@ -34,7 +34,7 @@ export default function Dashboard() {
   function addItem(formData) {
     const newItem = formData.get("item")
     setItems(prevItem => [...prevItem, newItem])
-    
+
     // Keep focus on input to maintain keyboard on mobile
     setTimeout(() => {
       if (itemInputRef.current) {
@@ -60,7 +60,7 @@ export default function Dashboard() {
       // Upload to S3 temp folder and get detected items
       const formData = new FormData()
       formData.append('image', file)
-      
+
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/image/upload-image`, {
         method: 'POST',
         credentials: 'include',
@@ -72,7 +72,7 @@ export default function Dashboard() {
       }
 
       const data = await response.json()
-      
+
       // Store temp key for later confirmation or deletion
       setTempImageKey(data.key)
 
@@ -94,13 +94,13 @@ export default function Dashboard() {
 
   async function getRecommendedItems() {
     const tripDetails = tripDetailsRef.current.value.trim()
-    
+
     // Check if trip details are provided
     if (!tripDetails) {
       alert('Please describe your trip details before generating recommendations.')
       return
     }
-    
+
     setLoadingRecommendations(true)
     setSaved(false) // Reset saved state when generating new recommendations
     try {
@@ -117,10 +117,10 @@ export default function Dashboard() {
 
   const handleSave = async () => {
     if (!recommendedItems) return;
-    
+
     setSaving(true);
     let imageKey = null;
-    
+
     try {
 
       // If image was uploaded to temp, moves it to permanent storage
@@ -129,12 +129,12 @@ export default function Dashboard() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             tempKey: tempImageKey
             // userId is obtained from auth token by backend
           })
         });
-        
+
         if (confirmResponse.ok) {
           const confirmData = await confirmResponse.json();
           imageKey = confirmData.newKey;
@@ -143,7 +143,7 @@ export default function Dashboard() {
           console.log(errorData)
         }
       }
-      
+
       // Save the recommendation
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/recommendations/save`, {
         method: 'POST',
@@ -163,11 +163,11 @@ export default function Dashboard() {
       if (!response.ok) {
         throw new Error('Failed to save recommendation');
       }
-      
+
       // Set saved state and stop showing loading spinner
       setSaving(false);
       setSaved(true);
-      
+
       // Reset image states after successful save
       setTempImageKey(null);
       setSelectedImage(null);
@@ -185,8 +185,8 @@ export default function Dashboard() {
           <label className="purpose-label">Add items that you have already packed</label>
           <small className="purpose-info">For the best recommendations, add as many items you know you need to pack.</small>
           <form action={addItem} className="add-item-form">
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="image-attach-btn"
               onClick={handleImageClick}
               disabled={uploadingImage}
@@ -195,7 +195,7 @@ export default function Dashboard() {
             >
               {uploadingImage ? 'Uploading...' : 'Image'}
             </button>
-            <input 
+            <input
               type="file"
               name="image"
               ref={fileInputRef}
@@ -204,12 +204,12 @@ export default function Dashboard() {
               style={{ display: 'none' }}
               aria-label="Upload image file"
             />
-            <input 
+            <input
               ref={itemInputRef}
-              aria-label="add packed item" 
-              type="text" 
+              aria-label="add packed item"
+              type="text"
               placeholder="e.g. charger"
-              name="item"/>
+              name="item" />
             <button>Add to Bag</button>
           </form>
           {uploadingImage && (
@@ -224,26 +224,26 @@ export default function Dashboard() {
           )}
         </div>
 
-        <PackedList listOfItems = {items} />
-        
+        <PackedList listOfItems={items} />
+
         <div className="purpose-container">
           <label className="purpose-label">Describe your trip so AI can suggest better items *</label>
           <small className="purpose-info">Add details like location, length of stay, and activities for better recommendations.</small>
-          <textarea 
-            ref={tripDetailsRef} 
-            placeholder="e.g. I'm moving into a university dorm for 8 months with a small kitchen but no stove, so I'll need ideas for long-term essentials. Or: I'm going to Atlanta for a week for a wedding, and I might also go sightseeing and shopping at malls during the trip." 
+          <textarea
+            ref={tripDetailsRef}
+            placeholder="e.g. I'm moving into a university dorm for 8 months with a small kitchen but no stove, so I'll need ideas for long-term essentials. Or: I'm going to Atlanta for a week for a wedding, and I might also go sightseeing and shopping at malls during the trip."
             className="purpose-text"
           ></textarea>
         </div>
-        
+
         {/* Recommend Essentials Section */}
         <div className="recommend-items-container">
           <div className="recommend-items-box">
             <div ref={recommendedEssentials}>
-              <h3>✨ Get Your AI Recommendations</h3>
+              <h3>Get Your AI Recommendations</h3>
               <p>Click below to generate personalized packing suggestions based on your trip details and packed items.</p>
             </div>
-            <button 
+            <button
               onClick={getRecommendedItems}
               disabled={loadingRecommendations}
               className={loadingRecommendations ? "loading" : ""}
@@ -262,20 +262,20 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
-        
+
         {/* AI Recommendations Section */}
         {recommendedItems && (
           <section className="suggested-recipe-container">
             {/* Save Section - Made more prominent */}
-            <SaveRecommendations 
-            title={title}
-            setTitle={setTitle}
-            handleSave={handleSave}
-            saving={saving}
-            saved={saved}
-            recommendedItems={recommendedItems}
+            <SaveRecommendations
+              title={title}
+              setTitle={setTitle}
+              handleSave={handleSave}
+              saving={saving}
+              saved={saved}
+              recommendedItems={recommendedItems}
             />
-            
+
             {/* Recommendations and Chatbot Side-by-Side */}
             <div className="recommendations-chatbot-wrapper">
               <div className="recommendations-content">
@@ -284,7 +284,7 @@ export default function Dashboard() {
               </div>
 
               <div className="chatbot-section">
-                <Chatbot 
+                <Chatbot
                   packedItems={items}
                   tripSummary={tripSummary}
                   aiRecommendations={recommendedItems}
@@ -293,13 +293,13 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <SaveRecommendations 
-            title={title}
-            setTitle={setTitle}
-            handleSave={handleSave}
-            saving={saving}
-            saved={saved}
-            recommendedItems={recommendedItems}
+            <SaveRecommendations
+              title={title}
+              setTitle={setTitle}
+              handleSave={handleSave}
+              saving={saving}
+              saved={saved}
+              recommendedItems={recommendedItems}
             />
           </section>
         )}

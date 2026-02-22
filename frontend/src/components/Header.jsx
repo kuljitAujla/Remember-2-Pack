@@ -1,7 +1,7 @@
 import logo from "../assets/remember2pack_logo.png"
 import hamburgerIcon from "../assets/hamburger-menu.png"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import "../styles/header.css"
 
 export default function Header() {
@@ -9,6 +9,21 @@ export default function Header() {
   const navigate = useNavigate()
   const isAuthenticatedRoute = location.pathname === '/app' || location.pathname === '/saved'
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const menuRef = useRef(null)
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    if (!isMenuOpen) return
+
+    function handleClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isMenuOpen])
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -20,7 +35,7 @@ export default function Header() {
         method: 'POST',
         credentials: 'include'
       })
-      
+
       if (response.ok) {
         navigate('/')
       }
@@ -32,18 +47,18 @@ export default function Header() {
   return (
     <header>
       <div className="header-left">
-        <img id="header-logo" src={logo} alt="remember 2 pack Logo"/>
+        <img id="header-logo" src={logo} alt="remember 2 pack Logo" />
       </div>
       <div className="header-center">
         {/* Empty div for balance on desktop */}
       </div>
       <div className="header-right">
         {isAuthenticatedRoute && (
-          <div className="menu-container">
+          <div className="menu-container" ref={menuRef}>
             <button className="hamburger-menu" onClick={toggleMenu}>
               <img src={hamburgerIcon} alt="Menu" className="hamburger-icon" />
             </button>
-            
+
             {isMenuOpen && (
               <div className="dropdown-menu">
                 <Link to="/saved" className="menu-item" onClick={() => setIsMenuOpen(false)}>

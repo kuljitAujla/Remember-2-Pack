@@ -1,120 +1,141 @@
-/* Saved Recommendations Page Styles */
+/* ============================================================
+   Saved Recommendations Page
+   ============================================================ */
 .saved-recommendations-page {
   min-height: 100vh;
-  background-color: #0D1117;
-  color: #EAEAEA;
+  background-color: var(--bg);
+  color: var(--text);
 }
 
 .page-header {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 20px;
-  border-bottom: 1px solid #333;
-  background-color: #1E1E1E;
+  gap: 16px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
 }
 
 .back-btn {
-  background-color: #5170ff;
-  color: white;
+  background: var(--accent);
+  color: var(--text-on-accent);
   text-decoration: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  padding: 8px 18px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: background-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
 }
 
 .back-btn:hover {
-  background-color: #3a58e5;
+  background: var(--accent-hover);
+  color: white;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
 }
 
 .page-header h1 {
   margin: 0;
-  color: #EAEAEA;
+  font-size: 1.15rem;
+  font-weight: 600;
 }
 
+/* ---- Split Layout ---- */
 .recommendations-container {
   display: flex;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 64px);
 }
 
 .recommendations-list {
-  width: 40%;
-  border-right: 1px solid #333;
+  width: 38%;
+  border-right: 1px solid var(--border);
   overflow-y: auto;
-  padding: 20px;
+  padding: 18px;
+  background: var(--bg);
 }
 
 .recommendation-item {
-  background-color: #2A2A2A;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  border: 2px solid transparent;
+  transition:
+    background-color var(--duration) var(--ease),
+    border-color var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease);
+  border: 1px solid var(--border);
   position: relative;
 }
 
 .recommendation-item:hover {
-  background-color: #333;
+  box-shadow: var(--shadow-sm);
+  border-color: var(--border-hover);
 }
 
 .recommendation-item.active {
-  border-color: #5170ff;
-  background-color: #333;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-subtle);
+  background: var(--accent-subtle);
 }
 
 .recommendation-preview h3 {
-  color: #EAEAEA;
-  margin: 0 0 8px 0;
-  font-size: 16px;
+  color: var(--text);
+  margin: 0 0 4px;
+  font-size: 0.92rem;
+  font-weight: 600;
 }
 
 .trip-summary {
-  color: #BBB;
-  font-size: 14px;
-  margin: 8px 0;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  margin: 4px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  line-height: 1.5;
 }
 
 .packed-count {
-  color: #888;
-  font-size: 12px;
-  margin: 4px 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
 }
 
 .created-date {
-  color: #666;
-  font-size: 12px;
-  margin: 4px 0 0 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
 }
 
 .delete-btn {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: #dc3545;
+  background: var(--error);
   color: white;
   border: none;
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 12px;
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  opacity: 0;
+  transition: opacity var(--duration) var(--ease), background-color var(--duration) var(--ease);
+}
+
+.recommendation-item:hover .delete-btn {
+  opacity: 1;
 }
 
 .delete-btn:hover {
-  background-color: #c82333;
+  background-color: #dc2626;
 }
 
+/* ---- Details ---- */
 .recommendation-details {
-  width: 60%;
-  padding: 20px;
+  width: 62%;
+  padding: 24px 28px;
   overflow-y: auto;
+  background: var(--bg-card);
 }
 
 .details-header {
@@ -125,39 +146,48 @@
 }
 
 .details-header h2 {
-  color: #EAEAEA;
   margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
 }
 
-.trip-info, .packed-items, .ai-recommendations, .uploaded-image {
-  margin-bottom: 25px;
+.trip-info,
+.packed-items,
+.ai-recommendations,
+.uploaded-image {
+  margin-bottom: 24px;
 }
 
-.trip-info h3, .packed-items h3, .ai-recommendations h3, .uploaded-image h3 {
-  color: #EAEAEA;
-  margin: 0 0 10px 0;
-  font-size: 18px;
+.trip-info h3,
+.packed-items h3,
+.ai-recommendations h3,
+.uploaded-image h3 {
+  color: var(--text);
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .trip-info p {
-  color: #BBB;
-  line-height: 1.5;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 0.92rem;
 }
 
 .uploaded-image {
-  background-color: #2A2A2A;
-  padding: 15px;
-  border-radius: 8px;
-  border: 1px solid #333;
+  background: var(--bg-subtle);
+  padding: 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
 }
 
 .uploaded-image img {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition: transform 0.2s ease;
+  border-radius: var(--radius-sm);
+  transition: opacity var(--duration) var(--ease);
 }
 
 .uploaded-image img:hover {
-  transform: scale(1.02);
+  opacity: 0.92;
 }
 
 .packed-items ul {
@@ -166,86 +196,107 @@
 }
 
 .packed-items li {
-  background-color: #2A2A2A;
-  color: #EAEAEA;
-  padding: 8px 12px;
-  margin-bottom: 5px;
-  border-radius: 4px;
+  background: var(--bg-subtle);
+  color: var(--text);
+  padding: 8px 14px;
+  margin-bottom: 4px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
 }
 
 .ai-recommendations {
-  color: #EAEAEA;
+  color: var(--text);
 }
 
-.ai-recommendations h1, .ai-recommendations h2, .ai-recommendations h3 {
-  color: #EAEAEA;
+.ai-recommendations h1,
+.ai-recommendations h2,
+.ai-recommendations h3 {
+  color: var(--text);
 }
 
-.ai-recommendations ul, .ai-recommendations ol {
-  color: #BBB;
+.ai-recommendations ul,
+.ai-recommendations ol {
+  color: var(--text-secondary);
 }
 
 .no-recommendations {
   text-align: center;
-  padding: 40px 20px;
-  color: #888;
+  padding: 48px 24px;
+  color: var(--text-muted);
 }
 
 .no-recommendations h3 {
-  color: #EAEAEA;
+  color: var(--text-secondary);
   margin-bottom: 10px;
+  font-weight: 600;
 }
 
 .btn-primary {
-  display: inline-block;
-  background-color: #5170ff;
-  color: white;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent);
+  color: var(--text-on-accent);
   text-decoration: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  padding: 10px 22px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.88rem;
+  transition: background-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
 }
 
 .btn-primary:hover {
-  background-color: #3a58e5;
+  background: var(--accent-hover);
+  color: white;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
 }
 
 .loading {
-  color: #EAEAEA;
+  color: var(--text-secondary);
   text-align: center;
-  padding: 40px 20px;
+  padding: 48px 24px;
 }
 
 .error-message {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 10px 15px;
-  border-radius: 6px;
-  margin: 20px;
-  border: 1px solid #f5c6cb;
+  background: var(--error-soft);
+  color: #b91c1c;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  margin: 18px;
+  border: 1px solid var(--error);
+  font-size: 0.88rem;
 }
 
-/* Mobile Responsive */
+/* ============================================================
+   Responsive
+   ============================================================ */
 @media (max-width: 768px) {
   .recommendations-container {
     flex-direction: column;
   }
-  
+
   .recommendations-list {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--border);
     max-height: 300px;
   }
-  
+
   .recommendation-details {
     width: 100%;
+    padding: 18px;
   }
-  
+
+  .delete-btn {
+    opacity: 1;
+  }
+
   .page-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .page-header h1 {
+    font-size: 1rem;
   }
 }

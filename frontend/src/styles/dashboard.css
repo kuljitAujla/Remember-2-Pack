@@ -1,44 +1,44 @@
-/* Dashboard Styles */
+/* ============================================================
+   Dashboard
+   ============================================================ */
 .dashboard-container {
   min-height: 100vh;
-  background-color: #0f0f10;
-  color: #EAEAEA;
+  background-color: var(--bg);
+  color: var(--text);
 }
 
-/* Save Recommendations Section - Subtle */
+/* ---- Save Section ---- */
 .save-recommendations-section {
-  background-color: #1a1f2e;
-  border: 1px solid #2a3441;
-  border-radius: 8px;
-  padding: 20px;
-  margin: 25px auto;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  max-width: 70%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin: 28px auto;
+  box-shadow: var(--shadow-sm);
+  max-width: 100%;
 }
 
 .save-section-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .save-section-header h3 {
-  color: #EAEAEA;
-  font-size: 1.3rem;
-  font-weight: 500;
-  margin: 0 0 8px 0;
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 4px;
 }
 
 .save-section-header p {
-  color: #B0B0B0;
-  font-size: 0.95rem;
-  margin: 0;
-  font-weight: 400;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
 }
 
 .save-section {
   display: flex;
   align-items: end;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -46,97 +46,154 @@
 .trip-name-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   flex: 1;
-  min-width: 250px;
+  min-width: 200px;
 }
 
 .trip-name-label {
-  color: #EAEAEA;
-  font-weight: 500;
-  font-size: 0.9rem;
-  margin: 0;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.85rem;
 }
 
 .trip-title-input {
-  border-radius: 8px;
-  border: 2px solid #333;
-  padding: 12px 16px;
-  background-color: #1E1E1E;
-  color: #EAEAEA;
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  min-width: 250px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.92rem;
+  transition: border-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
 }
 
 .trip-title-input:focus {
   outline: none;
-  border-color: #5170ff;
-  background-color: #252525;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
 }
 
 .trip-title-input::placeholder {
-  color: #888;
-  font-style: italic;
+  color: var(--text-muted);
 }
 
 .save-btn {
-  background-color: #5170ff;
-  color: white;
+  background: var(--accent);
+  color: var(--text-on-accent);
   border: none;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-size: 0.95rem;
-  font-weight: 500;
+  border-radius: var(--radius);
+  padding: 10px 22px;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  min-width: 180px;
-  height: fit-content;
+  min-width: 160px;
+  transition:
+    background-color var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease),
+    transform var(--duration) var(--ease);
 }
 
 .save-btn:hover:not(:disabled) {
-  background-color: #3a58e5;
+  background: var(--accent-hover);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+  transform: translateY(-1px);
+}
+
+.save-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .save-btn:disabled {
-  background-color: #6c757d;
+  background: var(--border);
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 
-/* Wrapper for side-by-side layout */
+.save-btn.saved {
+  background: #22c55e;
+  color: white;
+}
+
+/* ---- Save Success ---- */
+.save-success-msg {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: var(--success-soft);
+  border: 1px solid #22c55e;
+  border-radius: var(--radius);
+  text-align: center;
+  animation: fadeSlideIn 300ms var(--ease);
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.save-success-msg p {
+  color: #15803d;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+}
+
+.view-saved-link {
+  display: inline-block;
+  background: var(--accent);
+  color: white;
+  padding: 8px 20px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: background-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+}
+
+.view-saved-link:hover {
+  background: var(--accent-hover);
+  color: white;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+}
+
+.save-hint {
+  display: block;
+  margin-top: 8px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* ---- Recommendations + Chatbot Layout ---- */
 .recommendations-chatbot-wrapper {
   display: flex;
-  gap: 30px;
-  margin-top: 20px;
-  max-width: 95%;
-  margin-left: auto;
-  margin-right: auto;
+  gap: 24px;
+  margin-top: 28px;
   align-items: flex-start;
 }
 
-/* Enhanced Recommendations Content */
 .recommendations-content {
-  flex: 3; /* Give recommendations more space */
-  min-width: 400px;
-  background: linear-gradient(135deg, #1a1f2e 0%, #2a3441 100%);
-  border-radius: 20px;
-  padding: 32px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
+  flex: 3;
+  min-width: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
 }
 
 .recommendations-content h2 {
-  color: #EAEAEA;
-  font-size: 1.8rem;
+  color: var(--text);
+  font-size: 1.25rem;
   font-weight: 700;
-  margin-bottom: 32px;
-  text-align: left;
-  background: linear-gradient(135deg, #EAEAEA 0%, #B0B0B0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  border-bottom: 2px solid #3a4a5c;
-  padding-bottom: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
 }
 
 .recommendations-content h1,
@@ -145,190 +202,145 @@
 .recommendations-content h4,
 .recommendations-content h5,
 .recommendations-content h6 {
-  color: #EAEAEA;
+  color: var(--text);
   text-align: left;
-  margin-top: 32px;
-  margin-bottom: 16px;
-  font-size: 1.4rem;
+  margin-top: 24px;
+  margin-bottom: 10px;
+  font-size: 1.05rem;
   font-weight: 600;
-  position: relative;
 }
 
 .recommendations-content h1:first-of-type,
 .recommendations-content h2:first-of-type,
-.recommendations-content h3:first-of-type,
-.recommendations-content h4:first-of-type,
-.recommendations-content h5:first-of-type,
-.recommendations-content h6:first-of-type {
+.recommendations-content h3:first-of-type {
   margin-top: 0;
 }
 
-/* Enhanced List Styling */
 .recommendations-content ul,
 .recommendations-content ol {
   text-align: left;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   padding-left: 0;
   list-style-type: none;
 }
 
 .recommendations-content li {
-  background: linear-gradient(135deg, #2a3441 0%, #3a4a5c 100%);
-  color: #EAEAEA;
-  margin-bottom: 12px;
+  background: var(--bg-subtle);
+  color: var(--text);
+  margin-bottom: 6px;
   line-height: 1.6;
-  padding: 16px 20px;
-  border-radius: 12px;
-  border: 1px solid #3a4a5c;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  position: relative;
-  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  transition: border-color var(--duration) var(--ease), background-color var(--duration) var(--ease);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 }
 
 .recommendations-content li:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-  border-color: #5170ff;
+  border-color: var(--border);
+  background: var(--bg-card);
 }
 
 .recommendations-content li::before {
-  content: "✓";
-  color: #5170ff;
-  font-weight: bold;
-  margin-right: 12px;
-  font-size: 1.1rem;
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 8px;
 }
 
 .recommendations-content p {
   text-align: left;
-  margin-bottom: 20px;
-  color: #CCCCCC;
-  line-height: 1.6;
-  font-size: 1.05rem;
+  margin-bottom: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 0.92rem;
 }
 
-/* Chatbot Section in Dashboard */
+/* ---- Chatbot Section ---- */
 .chatbot-section {
-  flex: 1; /* Give chatbot less space than recommendations */
+  flex: 1;
   position: sticky;
-  top: 20px;
+  top: 92px;
   align-self: flex-start;
+  min-width: 400px;
 }
 
 .chatbot-section .chatbot-container {
-  margin: 0; /* Override default margin from chatbot.css */
+  margin: 0;
   max-width: 100%;
-  height: 600px;
-  transform: scale(0.87); /* Make chatbot proportionally smaller */
-  transform-origin: top center; /* Scale from top center */
+  height: 560px;
+  transform: none;
 }
 
-/* Loading Spinner Styles */
+/* ---- Spinner ---- */
 .loading-spinner {
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top: 2px solid #ffffff;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
   border-radius: 50%;
-  animation: spin 1s ease-in-out infinite;
-  margin-right: 8px;
+  animation: dspin 0.7s linear infinite;
+  margin-right: 6px;
 }
 
-@keyframes spin {
+@keyframes dspin {
   to {
     transform: rotate(360deg);
   }
 }
 
 button.loading {
-  opacity: 0.8;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
-button.loading:hover {
-  transform: none;
-}
-
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .save-recommendations-section {
-    padding: 16px;
-    margin: 25px 0;
-    max-width: 100%;
-    width: 100%;
-  }
-  
-  .save-section-header h3 {
-    font-size: 1.2rem;
-  }
-  
-  .save-section-header p {
-    font-size: 0.9rem;
-  }
-  
-  .save-section {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-  }
-  
-  .trip-name-group {
-    min-width: unset;
-  }
-  
-  .trip-title-input {
-    min-width: unset;
-    width: 100%;
-  }
-  
-  .save-btn {
-    min-width: unset;
-    width: 100%;
-    padding: 12px 20px;
-  }
-  
-  .recommendations-content {
-    max-width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    padding: 0 16px;
-  }
-  
-  .recommendations-content h2 {
-    font-size: 1.3rem;
-  }
-  
-  .recommendations-content h1,
-  .recommendations-content h2,
-  .recommendations-content h3,
-  .recommendations-content h4,
-  .recommendations-content h5,
-  .recommendations-content h6 {
-    font-size: 1.1rem;
-    margin-top: 20px;
-  }
-  
-  .recommendations-content ul,
-  .recommendations-content ol {
-    padding-left: 16px;
-  }
-
-  /* Stack recommendations and chatbot on mobile */
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 1024px) {
   .recommendations-chatbot-wrapper {
     flex-direction: column;
-    max-width: 100%;
-    gap: 20px;
   }
 
   .chatbot-section {
-    flex: 1;
     position: static;
     width: 100%;
+    min-width: unset;
   }
 
   .chatbot-section .chatbot-container {
-    height: 500px;
+    height: 480px;
+  }
+}
+
+@media (max-width: 768px) {
+  .save-recommendations-section {
+    padding: 18px;
+    max-width: 100%;
+  }
+
+  .save-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .trip-name-group {
+    min-width: unset;
+  }
+
+  .save-btn {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .recommendations-content {
+    padding: 18px;
   }
 }

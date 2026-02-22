@@ -1,10 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export default function SaveRecommendations({ title, setTitle, handleSave, saving, saved, recommendedItems }) {
   return (
     <div className="save-recommendations-section">
       <div className="save-section-header">
-        <h3>💾 Save Your Recommendations</h3>
+        <h3>Save Your Recommendations</h3>
         <p>Give your trip a name and save these recommendations for later!</p>
       </div>
       <div className="save-section">
@@ -19,7 +20,7 @@ export default function SaveRecommendations({ title, setTitle, handleSave, savin
             className="trip-title-input"
           />
         </div>
-        <button 
+        <button
           onClick={handleSave}
           disabled={saving || saved || !recommendedItems}
           className={`save-btn ${saved ? 'saved' : ''}`}
@@ -30,16 +31,19 @@ export default function SaveRecommendations({ title, setTitle, handleSave, savin
               Saving...
             </>
           ) : saved ? (
-            <>
-              Saved
-            </>
+            'Saved'
           ) : (
-            <>
-              💾 Save Recommendations
-            </>
+            'Save Recommendations'
           )}
         </button>
       </div>
+      {saved && (
+        <div className="save-success-msg">
+          <p>Recommendations saved successfully!</p>
+          <Link to="/saved" className="view-saved-link">View saved trips</Link>
+          <span className="save-hint">or use the menu in the top right</span>
+        </div>
+      )}
     </div>
   );
 }
