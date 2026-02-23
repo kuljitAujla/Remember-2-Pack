@@ -10,7 +10,7 @@ const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
 export const AI_CONFIG = {
   HF_MODEL: "meta-llama/Llama-3.1-8B-Instruct",
-  CLAUDE_MODEL: "claude-3-5-haiku-20241022",
+  CLAUDE_MODEL: "claude-haiku-4-5-20251001",
   HF_ENDPOINT: "https://router.huggingface.co/v1/chat/completions",
   MAX_TOKENS: {
     BRIEF: 512,
@@ -26,7 +26,7 @@ export const AI_CONFIG = {
 options.maxTokens - Maximum tokens for response
  */
 export async function callAI(prompt, options = {}) {
-  const { 
+  const {
     maxTokens = AI_CONFIG.MAX_TOKENS.STANDARD
   } = options;
 

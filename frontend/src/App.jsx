@@ -8,26 +8,29 @@ import SavedRecommendations from './pages/SavedRecommendations'
 import ForgotPassword from './pages/ForgotPassword'
 import VerifyEmail from './pages/VerifyEmail'
 import ProtectedRoute from './components/ProtectedRoute'
+import VantaBackground from './components/VantaBackground'
 
 function App() {
   return (
     <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/app" element={<Dashboard />} />
-            <Route path="/saved" element={<SavedRecommendations />} />
-          </Route>
+      <VantaBackground>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="/app" element={<Dashboard />} />
+              <Route path="/saved" element={<SavedRecommendations />} />
+            </Route>
 
-          {/* Redirect any unknown routes to landing page */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </div>
+            {/* Redirect any unknown routes to landing page */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
+      </VantaBackground>
     </Router>
   )
 }

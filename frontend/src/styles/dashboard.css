@@ -1,20 +1,22 @@
 /* ============================================================
-   Dashboard
+   Dashboard — Dark Glass Theme
    ============================================================ */
 .dashboard-container {
   min-height: 100vh;
-  background-color: var(--bg);
+  background-color: transparent;
   color: var(--text);
 }
 
 /* ---- Save Section ---- */
 .save-recommendations-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
   padding: 24px;
   margin: 28px auto;
   box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   max-width: 100%;
 }
 
@@ -24,14 +26,14 @@
 }
 
 .save-section-header h3 {
-  color: var(--text);
+  color: #f1f5f9;
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0 0 4px;
 }
 
 .save-section-header p {
-  color: var(--text-secondary);
+  color: rgba(203, 213, 225, 0.75);
   font-size: 0.88rem;
 }
 
@@ -52,16 +54,16 @@
 }
 
 .trip-name-label {
-  color: var(--text);
+  color: rgba(226, 232, 240, 0.9);
   font-weight: 600;
   font-size: 0.85rem;
 }
 
 .trip-title-input {
   border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 10px 14px;
-  background: var(--bg);
+  background: rgba(15, 23, 42, 0.6);
   color: var(--text);
   font-size: 0.92rem;
   transition: border-color var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
@@ -70,11 +72,11 @@
 .trip-title-input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-subtle);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
 .trip-title-input::placeholder {
-  color: var(--text-muted);
+  color: rgba(148, 163, 184, 0.5);
 }
 
 .save-btn {
@@ -95,7 +97,7 @@
 
 .save-btn:hover:not(:disabled) {
   background: var(--accent-hover);
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
   transform: translateY(-1px);
 }
 
@@ -104,8 +106,8 @@
 }
 
 .save-btn:disabled {
-  background: var(--border);
-  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(148, 163, 184, 0.5);
   cursor: not-allowed;
 }
 
@@ -118,8 +120,8 @@
 .save-success-msg {
   margin-top: 16px;
   padding: 14px 18px;
-  background: var(--success-soft);
-  border: 1px solid #22c55e;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
   border-radius: var(--radius);
   text-align: center;
   animation: fadeSlideIn 300ms var(--ease);
@@ -138,7 +140,7 @@
 }
 
 .save-success-msg p {
-  color: #15803d;
+  color: #86efac;
   font-weight: 600;
   font-size: 0.9rem;
   margin: 0 0 8px;
@@ -159,7 +161,7 @@
 .view-saved-link:hover {
   background: var(--accent-hover);
   color: white;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
 
 .save-hint {
@@ -180,20 +182,22 @@
 .recommendations-content {
   flex: 3;
   min-width: 0;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-lg);
   padding: 28px;
   box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .recommendations-content h2 {
-  color: var(--text);
+  color: #f1f5f9;
   font-size: 1.25rem;
   font-weight: 700;
   margin-bottom: 20px;
   padding-bottom: 14px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .recommendations-content h1,
@@ -202,7 +206,7 @@
 .recommendations-content h4,
 .recommendations-content h5,
 .recommendations-content h6 {
-  color: var(--text);
+  color: #f1f5f9;
   text-align: left;
   margin-top: 24px;
   margin-bottom: 10px;
@@ -225,7 +229,7 @@
 }
 
 .recommendations-content li {
-  background: var(--bg-subtle);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--text);
   margin-bottom: 6px;
   line-height: 1.6;
@@ -240,8 +244,8 @@
 }
 
 .recommendations-content li:hover {
-  border-color: var(--border);
-  background: var(--bg-card);
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .recommendations-content li::before {
@@ -283,7 +287,7 @@
   display: inline-block;
   width: 14px;
   height: 14px;
-  border: 2px solid var(--border);
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-top-color: var(--accent);
   border-radius: 50%;
   animation: dspin 0.7s linear infinite;
